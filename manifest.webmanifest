@@ -1,0 +1,30 @@
+{
+ "name": "Dokimasia – Préparer un concours de la fonction publique",
+ "short_name": "Dokimasia",
+ "description": "Ce que les jurys attendent, cours, quiz et dilemmes corrigés pour 52 concours. Fonctionne hors ligne.",
+ "lang": "fr",
+ "start_url": "./",
+ "scope": "./",
+ "id": "./",
+ "display": "standalone",
+ "background_color": "#F6F4EF",
+ "theme_color": "#2E47B0",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
