@@ -6,7 +6,7 @@
 var HF=window.DOKI_HF||"https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/";
 var BASE=new URL("./",document.currentScript?document.currentScript.src:location.href).href;
 var CACHE="dokimasia-voix-neurales-v1";
-var ENGINE=[{u:BASE+"ort.wasm.min.js",s:142930},{u:BASE+"ort-wasm-simd.wasm",s:10595041},{u:BASE+"piper_phonemize.mjs",s:156000},{u:BASE+"piper_phonemize.wasm",s:635212},{u:BASE+"piper_phonemize.data",s:18077249}];
+var ENGINE=[{u:BASE+"ort.wasm.min.js",s:142930},{u:BASE+"ort-wasm-simd.wasm",s:10595041},{u:BASE+"piper_phonemize.mjs",s:158217},{u:BASE+"piper_phonemize.wasm",s:635212},{u:BASE+"piper_phonemize.data",s:18077249}];
 var MODELS={
  siwis:{file:"siwis/medium/fr_FR-siwis-medium",size:63221984},
  upmc:{file:"upmc/medium/fr_FR-upmc-medium",size:76733615}
