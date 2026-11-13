@@ -1,0 +1,7 @@
+Voix Dokimasia – composants et licences
+
+- ONNX Runtime Web 1.18.0 (ort.wasm.min.js, ort-wasm-simd.wasm) – Microsoft – licence MIT – https://github.com/microsoft/onnxruntime
+- piper_phonemize (WASM, espeak-ng intégré) – @diffusionstudio/piper-wasm 1.0.0 (MIT), via @mintplex-labs/piper-tts-web 1.0.5 (MIT). espeak-ng est sous licence GPL v3 : sources sur https://github.com/espeak-ng/espeak-ng et https://github.com/rhasspy/piper-phonemize
+- Modèles Piper (téléchargés depuis https://huggingface.co/rhasspy/piper-voices) :
+  - fr_FR-siwis-medium : corpus SIWIS, Université d’Édimbourg – CC BY 4.0 – https://datashare.is.ed.ac.uk/handle/10283/2353
+  - fr_FR-upmc-medium (voix Jessica et Pierre) : corpus UPMC / MaryTTS – CC BY-SA 4.0 – https://github.com/marytts/upmc-pierre-data
