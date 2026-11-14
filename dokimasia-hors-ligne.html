@@ -12,7 +12,7 @@ blockquote{font:italic 19px/1.4 Georgia,serif;border-left:4px solid var(--red);m
 textarea,input,select{width:100%;font:15px system-ui,sans-serif;border:1px solid var(--line);border-radius:6px;padding:8px;background:var(--bg);color:var(--ink)}textarea{min-height:120px}
 .bar{display:grid;grid-template-columns:1fr 120px 60px;gap:10px;align-items:center;margin:8px 0;font-size:14px}.track{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.track i{display:block;height:100%;background:var(--accent)}
 .ok{color:var(--green);font-weight:700}.ko{color:var(--red);text-decoration:line-through}fieldset{border:0;border-top:1px solid var(--line);margin:0;padding:10px 0}legend{font-weight:600}label{display:block;padding:2px 0}
-.cit{font-style:italic;color:var(--muted)}footer{margin-top:40px;font-size:13px;color:var(--muted)}@media (max-width:560px){.bar{grid-template-columns:1fr 70px 48px}h1{font-size:23px}}.simple{background:#f3f7f2;border-left:4px solid #2e7d32;padding:10px 14px;margin:0 0 16px;border-radius:6px;color:#1c2b1c}</style><style>.backhome{position:sticky;top:8px;z-index:50;min-height:44px;padding:10px 18px;font-size:16px;font-weight:600;background:#fff!important;border:2px solid currentColor;box-shadow:0 2px 8px rgba(0,0,0,.15)}.backhome:focus-visible{outline:3px solid #f5b700;outline-offset:2px}html.hc .backhome{background:#000!important;color:#ff0}</style></head><body><style>
+.cit{font-style:italic;color:var(--muted)}footer{margin-top:40px;font-size:13px;color:var(--muted)}@media (max-width:560px){.bar{grid-template-columns:1fr 70px 48px}h1{font-size:23px}}.simple{background:#f3f7f2;border-left:4px solid #2e7d32;padding:10px 14px;margin:0 0 16px;border-radius:6px;color:#1c2b1c}#ttsbar[hidden]{display:none}</style><style>.backhome{position:sticky;top:8px;z-index:50;min-height:44px;padding:10px 18px;font-size:16px;font-weight:600;background:#fff!important;border:2px solid currentColor;box-shadow:0 2px 8px rgba(0,0,0,.15)}.backhome:focus-visible{outline:3px solid #f5b700;outline-offset:2px}html.hc .backhome{background:#000!important;color:#ff0}</style></head><body><style>
 #pwabar{max-width:900px;margin:0 auto;padding:12px 16px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
 #pwabar button{font:600 13px system-ui,sans-serif;border-radius:8px;padding:6px 12px;cursor:pointer;background:transparent;color:var(--accent);border:1px solid var(--accent)}
 #pwabar button.main{background:var(--accent);color:#fff}
@@ -354,4 +354,347 @@ document.addEventListener("keydown",function(e){var t=e.target,form=t&&t.closest
 });
 apply();
 })();
-</script><script>document.addEventListener("keydown",function(e){if(e.altKey&&(e.code==="KeyT")){var b=document.querySelector("[data-home]");if(b){e.preventDefault();b.click();setTimeout(function(){var h=document.querySelector("#app h1, #app h2");if(h){h.tabIndex=-1;h.focus();}},50);}}});document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("[data-home]"))setTimeout(function(){scrollTo(0,0);var h=document.querySelector("#app h1, #app h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true});}},50);},true);</script></body></html>
+</script><script>document.addEventListener("keydown",function(e){if(e.altKey&&(e.code==="KeyT")){var b=document.querySelector("[data-home]");if(b){e.preventDefault();b.click();setTimeout(function(){var h=document.querySelector("#app h1, #app h2");if(h){h.tabIndex=-1;h.focus();}},50);}}});document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("[data-home]"))setTimeout(function(){scrollTo(0,0);var h=document.querySelector("#app h1, #app h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true});}},50);},true);</script><!-- DOKIREV-MODULE v1 --><style id="dokirev-css">#revRoot h2{margin-top:18px}
+#revRoot label{display:block;margin:10px 0 4px;font-weight:600}
+#revRoot input[type=date],#revRoot input[type=number]{font:16px system-ui,sans-serif;padding:8px 10px;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);max-width:260px;width:100%}
+#revRoot input[aria-invalid=true]{border:2px solid var(--red)}
+.rev-err{color:var(--red);margin:8px 0;font-weight:600}.rev-err:empty{display:none}
+.rev-warn{border-left:4px solid var(--red)!important}
+.rev-alert{color:var(--ink);border-left:4px solid var(--red);padding-left:10px}
+.rev-list{list-style:none;padding:0;margin:0}
+.rev-list li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:8px 0;border-top:1px solid var(--line)}
+.rev-list li label{flex:1 1 220px;margin:0!important;font-weight:400!important;cursor:pointer}
+.rev-list input[type=checkbox]{width:24px;height:24px;margin:0;flex:none;accent-color:var(--accent)}
+.rev-list input:checked+label{text-decoration:line-through;color:var(--muted)}
+.rev-card fieldset{border:0;padding:0;margin:0}.rev-card legend{font-weight:600;padding:0;margin-bottom:6px}
+.rev-card label{display:block;padding:6px 0;font-weight:400!important}
+.rev-card label.ok{color:var(--green);font-weight:700!important}.rev-card label.ko{color:var(--red);text-decoration:line-through}
+.rev-mark{margin:6px 0!important}.rev-mark[aria-pressed=true]{background:var(--accent-soft)!important}
+button.linkish{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;font:inherit;cursor:pointer;min-height:0}
+[data-rev-ui] button:focus-visible,[data-rev-ui] input:focus-visible,[data-rev-ui] summary:focus-visible,#revRoot [tabindex="-1"]:focus,.rev-mark:focus-visible{outline:3px solid #000!important;outline-offset:2px;box-shadow:0 0 0 6px #FFB000!important}
+html.hc .rev-card label.ok{color:#9CFF9C}html.hc .rev-card label.ko{color:#FF8A80}html.hc button.linkish{color:#7FD4FF}
+html.hc [data-rev-ui] button:focus-visible,html.hc [data-rev-ui] input:focus-visible,html.hc #revRoot [tabindex="-1"]:focus{outline-color:#FFE600!important}
+</style><script id="dokirev-js">/* Dokimasia : module « Réviser » (plan de révision + répétition espacée).
+   Module isolé : tout est dans try/catch. S'il échoue, il se retire (onglet supprimé,
+   render() d'origine restauré) et le reste de l'application fonctionne comme avant.
+   Stockage : localStorage, clé "dokimasia.revision.v1", séparée des autres clés.
+   Schéma v1 : {v:1, upd, plans:{<idConcours>:{date,hpw,start,base:{day,done,rem},done:{<idTâche>:jour},upd}},
+                cards:{<idCarte>:{r,z,h,b,due,n,l,t,m,x}}}
+   Identifiants stables : tâches "c:"+k du cours, "q:"+k du quiz, "d:"+id du dilemme, "o:"+id de la question d'oral.
+   Champs d'une carte : r concours, z k du quiz, h empreinte, b boîte, due jour à revoir, n révisions, l erreurs, t horodatage,
+   m ajoutée à la main, x question introuvable dans le contenu actuel, ok acquise ou retirée.
+   Réglages de test (sans effet en usage normal) : window.DOKIREV_NOW (jour simulé), window.DOKIREV_TEST_THROW ("init" ou "render").
+   Cartes de quiz : r|k du quiz|empreinte du texte de la question (retrouvée même si l'ordre change ;
+   une question disparue ou réécrite est ignorée, jamais effacée).
+   Répétition espacée : système de Leitner à 6 boîtes (0 à 5), intervalles 1, 2, 4, 7, 15, 30 jours.
+   Erreur au quiz ou « À revoir » : boîte 0, à revoir aujourd'hui. Bonne réponse en révision depuis la boîte b :
+   prochaine révision dans INT[b] jours et passage en boîte b+1 ; bonne réponse en boîte 5 (après 30 jours) : question acquise.
+   Mauvaise réponse en révision : retour en boîte 0, reposée demain. */
+(function(){
+"use strict";
+var dead=false,origRender=null,TAB=["revision","Réviser"];
+function kill(e){
+  if(dead)return;dead=true;
+  try{if(window.console&&console.warn)console.warn("Module Réviser désactivé :",e&&e.message||e);}catch(_){}
+  try{var i=TABS.findIndex(function(t){return t[0]===TAB[0];});if(i>=0)TABS.splice(i,1);}catch(_){}
+  try{if(origRender)render=origRender;}catch(_){}
+  try{var x=document.querySelectorAll("[data-rev-ui]");for(var j=0;j<x.length;j++)x[j].remove();}catch(_){}
+  try{if(T===TAB[0]){T="metier";}if(origRender)origRender();}catch(_){}
+}
+try{
+if(window.DOKIREV_TEST_THROW==="init")throw new Error("test init");
+if(typeof render!=="function"||typeof TABS==="undefined"||typeof D==="undefined")return;
+if(window.__dokiRev)return;window.__dokiRev=1;
+
+/* ---------- utilitaires ---------- */
+var KEY="dokimasia.revision.v1",VER=1,INT=[1,2,4,7,15,30];
+var e_=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+function dayOf(d){return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);}
+function today(){var t=window.DOKIREV_NOW;return typeof t==="number"?t:dayOf(new Date());}
+function isoDay(n){var d=new Date(n*864e5);return d.getUTCFullYear()+"-"+String(d.getUTCMonth()+1).padStart(2,"0")+"-"+String(d.getUTCDate()).padStart(2,"0");}
+function parseDay(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||""));if(!m)return NaN;var t=Date.UTC(+m[1],+m[2]-1,+m[3]);var d=new Date(t);if(d.getUTCMonth()!==+m[2]-1)return NaN;return Math.floor(t/864e5);}
+var MOIS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+var JOURS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+function fdate(n,wd){var d=new Date(n*864e5);return(wd?JOURS[d.getUTCDay()]+" ":"")+d.getUTCDate()+" "+MOIS[d.getUTCMonth()]+" "+d.getUTCFullYear();}
+function fshort(n){var d=new Date(n*864e5);return d.getUTCDate()+" "+MOIS[d.getUTCMonth()];}
+function hm(min){min=Math.max(0,Math.round(min/5)*5);var h=Math.floor(min/60),m=min%60;return h?(h+" h"+(m?" "+String(m).padStart(2,"0"):"")):(m+" min");}
+function hash(s){s=String(s||"").replace(/\s+/g," ").trim();var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(36);}
+function num(x,d){return typeof x==="number"&&isFinite(x)?x:d;}
+function BAD(k){return k==="__proto__"||k==="constructor"||k==="prototype";}
+function obj(x){return x&&typeof x==="object"&&!Array.isArray(x);}
+function words(s){return String(s||"").split(/\s+/).filter(Boolean).length;}
+
+/* ---------- stockage ---------- */
+var mem=null,storageOK=true,readOnly=false,saveErr=false;
+try{var tk="dokimasia.revision.test";localStorage.setItem(tk,"1");localStorage.removeItem(tk);}catch(e){storageOK=false;}
+function empty(){return{v:VER,upd:0,plans:{},cards:{}};}
+function cleanPlan(p){if(!obj(p))return null;var d=parseDay(p.date);if(isNaN(d))return null;var o={date:isoDay(d),hpw:Math.min(80,Math.max(0.5,num(+p.hpw,5))),start:num(p.start,today()),done:{},upd:num(p.upd,0)};
+  if(obj(p.base))o.base={day:num(p.base.day,o.start),done:num(p.base.done,0),rem:num(p.base.rem,0)};
+  if(obj(p.done))Object.keys(p.done).forEach(function(k){if(!BAD(k)&&typeof k==="string"&&k.length<300&&typeof p.done[k]==="number"&&isFinite(p.done[k]))o.done[k]=p.done[k];});return o;}
+function cleanCard(c){if(!obj(c)||typeof c.r!=="string"||typeof c.z!=="string"||typeof c.h!=="string")return null;
+  return{r:c.r.slice(0,100),z:c.z.slice(0,200),h:c.h.slice(0,20),b:Math.min(5,Math.max(0,Math.floor(num(c.b,0)))),due:num(c.due,today()),n:num(c.n,0),l:num(c.l,0),t:num(c.t,0),m:c.m?1:0,x:c.x?1:0,ok:c.ok?1:0};}
+function migrate(o){
+  if(!obj(o))return empty();
+  var v=num(o.v,0);
+  if(v>VER){readOnly=true;}               /* fichier d'une version future : on lit sans écrire */
+  /* v0 (hypothétique, sans numéro) -> v1 : mêmes champs. Les futures migrations s'ajouteront ici. */
+  var n=empty();n.upd=num(o.upd,0);
+  if(obj(o.plans))Object.keys(o.plans).forEach(function(k){if(BAD(k))return;var p=cleanPlan(o.plans[k]);if(p)n.plans[k]=p;});
+  if(obj(o.cards))Object.keys(o.cards).forEach(function(k){if(BAD(k))return;var c=cleanCard(o.cards[k]);if(c)n.cards[k]=c;});
+  return n;}
+var corrupt=false;
+function load(){if(!storageOK){return mem||(mem=empty());}var s=null;try{s=localStorage.getItem(KEY);return migrate(s?JSON.parse(s):null);}catch(e){
+  /* données illisibles : copie de secours, puis lecture seule pour ne rien écraser */
+  corrupt=true;readOnly=true;try{if(s)localStorage.setItem(KEY+".corrompu",s);}catch(_){}return empty();}}
+var S=load();
+function save(){S.upd=Date.now();if(readOnly)return false;if(!storageOK){mem=S;return false;}
+  try{localStorage.setItem(KEY,JSON.stringify(S));saveErr=false;return true;}catch(e){saveErr=true;return false;}}
+addEventListener("storage",function(ev){try{if(ev.key===KEY&&!dead){S=load();after();}}catch(e){kill(e);}});
+var persistAsked=false;
+function askPersist(){if(persistAsked)return;persistAsked=true;try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});}catch(e){}}
+
+/* ---------- annonces ---------- */
+var live=document.createElement("div");live.className="sr";live.setAttribute("aria-live","polite");live.setAttribute("role","status");live.id="revLive";live.setAttribute("data-rev-ui","1");document.body.appendChild(live);
+function say(t){live.textContent="";setTimeout(function(){live.textContent=t;},40);}
+
+/* ---------- contenu ---------- */
+function loaded(r){return r&&(!r.ext||r._ok);}
+function tasks(r){var out=[];
+  (r.cours||[]).forEach(function(c,i){if(!c||!c.k)return;var m=Math.min(150,Math.max(20,Math.round(words((c.texte||"")+" "+(c.simple||""))/60/5)*5));out.push({id:"c:"+c.k,type:"c",i:i,lib:"Cours : "+(c.t||""),min:m});});
+  (r.quiz||[]).forEach(function(z,i){if(!z||!z.k)return;out.push({id:"q:"+z.k,type:"q",i:i,lib:"Quiz : "+(z.t||""),min:Math.round(((z.qs||[]).length*1.5+5)/5)*5});});
+  (r.dils||[]).forEach(function(d,i){if(!d||!d.id)return;out.push({id:"d:"+d.id,type:"d",i:i,lib:"Dilemme : "+(d.titre||"sans titre"),min:35});});
+  (r.oral||[]).forEach(function(o,i){if(!o||!o.id)return;out.push({id:"o:"+o.id,type:"o",i:i,lib:"Oral : "+String(o.question||"").slice(0,110)+(String(o.question||"").length>110?"…":""),min:10});});
+  /* entrelacement : chaque type est réparti uniformément du début à la fin du plan */
+  var by={};out.forEach(function(t){(by[t.type]=by[t.type]||[]).push(t);});
+  Object.keys(by).forEach(function(k){var l=by[k],n=l.length;l.forEach(function(t,j){t.pos=(j+0.5)/n+({c:0,q:0.001,d:0.002,o:0.003})[k];});});
+  return out.sort(function(a,b){return a.pos-b.pos;});}
+var TYPE={c:"Cours",q:"Quiz",d:"Dilemme",o:"Oral"};
+
+/* ---------- plan ---------- */
+function geometry(p){var E=parseDay(p.date),st=p.start,total=Math.max(1,E-st);
+  var margin=total>=28?Math.max(7,Math.round(total*0.15)):total>=10?3:0;
+  return{E:E,st:st,studyEnd:E-margin,margin:margin,nW:Math.ceil(total/7)};}
+function compute(r,p){
+  var L0=tasks(r),g=geometry(p),td=today(),cap=p.hpw*60;
+  var ids={};L0.forEach(function(t){ids[t.id]=1;});
+  var done=L0.filter(function(t){return p.done[t.id]!=null;}),rem=L0.filter(function(t){return p.done[t.id]==null;});
+  var doneMin=done.reduce(function(s,t){return s+t.min;},0),remMin=rem.reduce(function(s,t){return s+t.min;},0),tot=doneMin+remMin;
+  var cw=Math.max(0,Math.floor((td-g.st)/7));
+  var weeks=[];
+  for(var w=cw;g.st+7*w<g.studyEnd||w===cw;w++){var ws=g.st+7*w,we=ws+6;
+    var days=Math.max(0,Math.min(we+1,g.studyEnd)-Math.max(ws,g.st));
+    var doneHere=w===cw?done.filter(function(t){var d=p.done[t.id];return d>=ws&&d<=we;}):[];
+    var c=cap*days/7;if(w===cw)c=Math.max(0,c-doneHere.reduce(function(s,t){return s+t.min;},0));
+    weeks.push({w:w,ws:ws,we:Math.min(we,g.E),cap:c,items:[],doneHere:doneHere});
+    if(weeks.length>520)break;}
+  var capTot=weeks.reduce(function(s,x){return s+x.cap;},0),f=1,late=td>=g.studyEnd;
+  if(remMin>capTot&&capTot>0)f=remMin/capTot;
+  if(capTot<=0){weeks[0].cap=remMin;f=1;}
+  var wi=0,used=0;
+  rem.forEach(function(t){while(wi<weeks.length-1&&used>0&&used+t.min>weeks[wi].cap*f+t.min*0.5){wi++;used=0;}
+    while(wi<weeks.length-1&&weeks[wi].cap<=0){wi++;used=0;}
+    weeks[wi].items.push(t);used+=t.min;});
+  /* rythme attendu depuis la dernière (re)création du plan */
+  var b=p.base||{day:g.st,done:0,rem:tot},span=Math.max(1,g.studyEnd-b.day),fr=Math.min(1,Math.max(0,(td-b.day)/span));
+  var expected=b.done+b.rem*fr,delta=doneMin-expected;
+  return{all:L0,ids:ids,done:done,rem:rem,doneMin:doneMin,remMin:remMin,tot:tot,weeks:weeks,g:g,f:f,capTot:capTot,delta:delta,late:late,td:td,cw:cw};}
+function newPlan(r,date,hpw){var td=today();var p={date:isoDay(date),hpw:hpw,start:td,done:{},upd:Date.now()};
+  var old=S.plans[r.id];if(old)p.done=old.done;
+  var c=compute(r,p);p.base={day:td,done:c.doneMin,rem:c.remMin};return p;}
+
+/* ---------- répétition espacée ---------- */
+function cardKey(rid,zk,h){return rid+"|"+zk+"|"+h;}
+function findQ(r,c){var z=(r.quiz||[]).find(function(z){return z&&z.k===c.z;});if(!z)return null;
+  for(var i=0;i<(z.qs||[]).length;i++){var q=z.qs[i];if(q&&hash(q.q)===c.h)return{z:z,q:q,i:i};}return null;}
+function grade(key,ok,from){var c=S.cards[key],td=today();if(!c)return;
+  c.n++;c.t=Date.now();
+  if(ok){var iv=INT[Math.min(c.b,5)];c.b++;if(c.b>5){c.b=5;c.ok=1;}c.due=td+iv;}
+  else{c.l++;c.b=0;c.ok=0;c.due=from==="quiz"?td:td+1;}}
+function failFromQuiz(r,z,q){var h=hash(q.q),k=cardKey(r.id,z.k,h),c=S.cards[k];
+  if(!c){S.cards[k]={r:r.id,z:z.k,h:h,b:0,due:today(),n:1,l:1,t:Date.now(),m:0,x:0,ok:0};}
+  else{c.x=0;grade(k,false,"quiz");}}
+function cardsOf(rid){var o=[];Object.keys(S.cards).forEach(function(k){var c=S.cards[k];if(c.r===rid)o.push([k,c]);});return o;}
+function dueCount(rid){var td=today();return cardsOf(rid).filter(function(kc){var c=kc[1];return !c.ok&&!c.x&&c.due<=td;}).length;}
+function markOrphans(r){if(!loaded(r))return;var ch=false;cardsOf(r.id).forEach(function(kc){var x=findQ(r,kc[1])?0:1;if(kc[1].x!==x){kc[1].x=x;ch=true;}});if(ch)save();}
+
+/* ---------- vues ---------- */
+var lastT=null,lastR=null,answered={},importBuf=null,msg="";
+var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+function warnings(){var h="";
+  if(!storageOK)h+='<div class="panel rev-warn"><p style="margin:0"><b>Enregistrement impossible dans ce navigateur</b> (navigation privée ou stockage bloqué). Le plan et les révisions fonctionnent pendant cette visite mais seront perdus en fermant la page. Utilisez « Exporter » pour les garder.</p></div>';
+  else if(corrupt)h+='<div class="panel rev-warn"><p style="margin:0"><b>Votre progression de révision enregistrée est illisible.</b> Une copie a été mise de côté et rien ne sera modifié. Importez votre dernier export pour reprendre.</p></div>';
+  else if(readOnly)h+='<div class="panel rev-warn"><p style="margin:0"><b>Progression créée par une version plus récente de Dokimasia.</b> Elle est affichée sans être modifiée. Mettez l’application à jour.</p></div>';
+  else if(saveErr)h+='<div class="panel rev-warn" role="alert"><p style="margin:0"><b>La dernière modification n’a pas pu être enregistrée</b> (espace de stockage plein ?). Exportez votre progression.</p></div>';
+  if(isIOS&&!standalone)h+='<div class="panel rev-warn"><p style="margin:0"><b>Sur iPhone et iPad, installez Dokimasia sur l’écran d’accueil</b> : bouton Partager, puis « Sur l’écran d’accueil ». Sinon Safari peut effacer votre plan et vos révisions après quelques semaines sans visite. Exportez aussi votre progression régulièrement.</p></div>';
+  return h;}
+function saveBox(){return '<div class="panel" data-rev-io><h3 style="margin-top:0">Sauvegarder ma progression de révision</h3><p style="margin:0 0 8px">Votre plan et vos questions à revoir restent sur cet appareil, sans compte. Exportez-les régulièrement (par exemple chaque semaine) pour ne rien perdre et pour les reprendre sur un autre appareil.</p>'+
+  '<div class="row"><button type="button" class="btn ghost small" data-rv="export">Exporter (fichier .json)</button><button type="button" class="btn ghost small" data-rv="import">Importer un fichier</button><input type="file" accept=".json,application/json" data-rev-file hidden aria-hidden="true" tabindex="-1"></div>'+
+  (importBuf?'<div class="rev-imp" role="group" aria-label="Importer la sauvegarde"><p style="margin:8px 0">Fichier valide : '+importBuf.np+' plan(s) et '+importBuf.nc+' question(s) à revoir, exporté le '+e_(importBuf.date)+'. Que faire ?</p><div class="row"><button type="button" class="btn small" data-rv="merge">Fusionner avec ma progression</button><button type="button" class="btn ghost small" data-rv="replace">Remplacer ma progression</button><button type="button" class="btn ghost small" data-rv="impcancel">Annuler</button></div></div>':"")+
+  (msg?'<p style="margin:8px 0 0"><b>'+e_(msg)+'</b></p>':"")+'</div>';}
+function form(r,p){var td=today(),c=compute(r,p||{date:isoDay(td+60),hpw:6,start:td,done:{}});
+  return '<form class="panel rev-form" data-rev-form novalidate><h3 style="margin-top:0">'+(p?"Modifier mon plan":"Créer mon plan de révision")+'</h3>'+
+  '<p style="margin:0 0 8px">Indiquez la date de votre épreuve et le temps que vous pouvez y consacrer chaque semaine. Dokimasia répartit les '+c.all.length+' activités de ce concours (cours, quiz, dilemmes, questions d’oral, environ '+hm(c.tot)+' de travail) jusqu’à cette date, en gardant une période de révision finale.</p>'+
+  '<label for="revDate">Date du concours (première épreuve)</label><input id="revDate" type="date" required min="'+isoDay(td+1)+'" value="'+(p?e_(p.date):"")+'" aria-describedby="revErr">'+
+  '<label for="revH">Temps disponible par semaine, en heures</label><input id="revH" type="number" inputmode="decimal" min="0.5" max="80" step="0.5" required value="'+(p?p.hpw:"6")+'" aria-describedby="revErr">'+
+  '<p id="revErr" class="rev-err" role="alert"></p><div class="row"><button type="submit" class="btn">'+(p?"Recalculer le plan":"Créer mon plan")+'</button>'+(p?'<button type="button" class="btn ghost small" data-rv="cancelEdit">Annuler</button>':"")+'</div></form>';}
+var editing=false;
+function planView(r,p){var c=compute(r,p),g=c.g,td=c.td,h="";
+  var left=g.E-td,pct=c.tot?Math.round(c.doneMin*100/c.tot):0;
+  var st;
+  if(left<0)st="La date du concours est passée. Modifiez le plan pour une nouvelle session.";
+  else if(Math.abs(c.delta)<60)st="Vous êtes dans le rythme prévu.";
+  else if(c.delta>0)st="Vous avez environ "+hm(c.delta)+" d’avance : les semaines suivantes ont été allégées.";
+  else st="Vous avez environ "+hm(-c.delta)+" de retard : le travail restant a été réparti sur les semaines qui restent.";
+  h+='<div class="panel"><h3 style="margin-top:0">Mon plan de révision</h3><p style="margin:0">Concours le '+fdate(g.E,true)+(left>0?", dans "+left+" jour"+(left>1?"s":""):left===0?", aujourd’hui":"")+'. '+e_(String(p.hpw).replace(".",","))+' h par semaine.</p>'+
+    '<p style="margin:6px 0 0">Avancement : '+c.done.length+' activités sur '+c.all.length+' ('+pct+' %, '+hm(c.doneMin)+' sur '+hm(c.tot)+'). '+st+'</p>'+
+    '<div class="track" aria-hidden="true" style="margin:8px 0"><i style="width:'+pct+'%"></i></div>'+
+    (c.f>1.05&&left>=0?'<p class="rev-alert" style="margin:6px 0 0"><b>Le temps prévu ne suffit pas :</b> il manque environ '+hm(c.remMin-c.capTot)+'. Les semaines sont chargées au-delà de vos '+e_(String(p.hpw).replace(".",","))+' h. Augmentez votre temps hebdomadaire ou traitez en priorité les cours et les quiz.</p>':"")+
+    '<div class="row" style="margin-top:8px"><button type="button" class="btn ghost small" data-rv="edit">Modifier la date ou le temps</button><button type="button" class="btn ghost small" data-rv="delplan">Supprimer le plan</button></div></div>';
+  var cur=c.weeks[0];
+  function li(t,checked){var id="rvt-"+hash(t.id);return '<li><input type="checkbox" id="'+id+'" data-task="'+e_(t.id)+'"'+(checked?" checked":"")+'><label for="'+id+'">'+e_(t.lib)+' <span class="muted">(environ '+hm(t.min)+')</span></label> <button type="button" class="btn ghost small rev-open" data-open="'+t.type+':'+t.i+'" aria-label="Ouvrir : '+e_(t.lib)+'">Ouvrir</button></li>';}
+  if(left>=0&&!c.late){
+    var load=cur.items.reduce(function(s,t){return s+t.min;},0);
+    h+='<section class="panel" aria-labelledby="revCW"><h3 id="revCW" tabindex="-1" style="margin-top:0">Cette semaine, du '+fshort(Math.max(cur.ws,td))+' au '+fshort(cur.we)+'</h3><p class="muted" style="margin:0 0 6px">'+(cur.items.length?"Environ "+hm(load)+" de travail. Cochez chaque activité terminée : le plan se réajuste.":"Plus rien de prévu cette semaine : avancez sur la semaine suivante ou révisez vos questions.")+'</p><ul class="rev-list">'+
+      cur.doneHere.map(function(t){return li(t,true);}).join("")+cur.items.map(function(t){return li(t,false);}).join("")+'</ul></section>';
+    c.weeks.slice(1).forEach(function(w,n){if(!w.items.length)return;var ld=w.items.reduce(function(s,t){return s+t.min;},0);
+      h+='<details class="rev-week"><summary>Semaine du '+fshort(w.ws)+' au '+fshort(w.we)+' · '+w.items.length+' activités, environ '+hm(ld)+'</summary><ul class="rev-list">'+w.items.map(function(t){return li(t,false);}).join("")+'</ul></details>';});
+  }else if(left>=0){
+    h+='<section class="panel" aria-labelledby="revCW"><h3 id="revCW" tabindex="-1" style="margin-top:0">Révision finale</h3><p style="margin:0 0 6px">Vous êtes dans la période de révision finale. Activités encore ouvertes, à traiter en priorité si le temps le permet :</p><ul class="rev-list">'+
+      c.rem.slice(0,30).map(function(t){return li(t,false);}).join("")+'</ul>'+(c.rem.length>30?'<p class="muted">Et '+(c.rem.length-30)+' autres.</p>':"")+'</section>';}
+  if(left>=0&&g.margin>0)h+='<details class="rev-week"><summary>Révision finale, du '+fshort(Math.max(g.studyEnd,td))+' au '+fshort(g.E)+'</summary><ul><li>Chaque jour : la file « À revoir aujourd’hui » ci-dessous.</li><li>Refaites les quiz où votre dernier score est le plus faible.</li><li>Relisez les parties « Comprendre simplement » des cours.</li><li>Au moins deux simulations complètes dans l’onglet Jury de pairs.</li><li>La veille de l’épreuve : repos, pas de nouveau contenu.</li></ul></details>';
+  return h;}
+function reviewView(r){var td=today(),list=cardsOf(r.id).map(function(kc){return{k:kc[0],c:kc[1],f:findQ(r,kc[1])};}).filter(function(x){return x.f&&!x.c.ok;});
+  var due=list.filter(function(x){return x.c.due<=td||answered[x.k];}),soon=list.filter(function(x){return x.c.due>td&&x.c.due<=td+7&&!answered[x.k];}).length;
+  var acq=cardsOf(r.id).filter(function(kc){return kc[1].ok;}).length;
+  var h='<section class="panel" aria-labelledby="revQ"><h3 id="revQ" tabindex="-1" style="margin-top:0">À revoir aujourd’hui ('+due.filter(function(x){return !answered[x.k];}).length+')</h3>';
+  h+='<p class="muted" style="margin:0 0 6px">Les questions de quiz ratées ou marquées « À revoir » reviennent au bon moment : le lendemain, puis après 2, 4, 7, 15 et 30 jours si vous répondez juste. '+soon+' question(s) prévue(s) dans les 7 jours, '+acq+' acquise(s).</p>';
+  if(!due.length)h+='<p style="margin:0">Rien à revoir aujourd’hui. Faites des quiz : vos erreurs viendront ici.</p>';
+  h+='</section>';
+  due.slice(0,30).forEach(function(x,n){var q=x.f.q,a=answered[x.k],nm="rvq"+hash(x.k);
+    h+='<div class="panel rev-card" data-card="'+e_(x.k)+'"><fieldset><legend>'+(n+1)+'. '+e_(q.q)+' <span class="muted">('+e_(x.f.z.t||"Quiz")+')</span></legend>'+
+      (q.options||[]).map(function(o,j){var cls=a?(j===q.bonne?"ok":(a.v===j?"ko":"")):"";return '<label class="'+cls+'"><input type="radio" name="'+nm+'" value="'+j+'"'+(a?" disabled":"")+(a&&a.v===j?" checked":"")+'> '+e_(o)+'</label>';}).join("")+
+      (a?'<p><b>'+(a.ok?"Bonne réponse.":"Réponse inexacte.")+'</b> '+(a.ok?(S.cards[x.k]&&S.cards[x.k].ok?"Question acquise.":"Prochaine révision le "+fdate(S.cards[x.k].due)+"."):"Elle reviendra demain.")+'</p><p class="muted">'+e_(q.explication||"")+'</p>':
+      '<div class="row"><button type="button" class="btn small" data-rv="check" data-k="'+e_(x.k)+'">Vérifier</button><button type="button" class="btn ghost small" data-rv="remove" data-k="'+e_(x.k)+'">Retirer de la révision</button></div>')+'</fieldset></div>';});
+  if(due.length>30)h+='<p class="muted">Les '+(due.length-30)+' autres questions s’afficheront ensuite.</p>';
+  return h;}
+function tabView(r){
+  var h='<div data-rev-ui="1" id="revRoot"><h2 id="revTitle" tabindex="-1">Réviser : plan et questions à revoir</h2>'+warnings();
+  if(!loaded(r)){h+='<div class="panel" role="status"><p style="margin:0">'+(r._err?"Le contenu de ce concours n’a pas pu être chargé. Ouvrez Dokimasia une fois avec une connexion : il restera ensuite disponible hors ligne.":"Chargement du contenu…")+'</p></div>'+saveBox()+'</div>';return h;}
+  markOrphans(r);
+  var p=S.plans[r.id];
+  h+=reviewView(r);
+  if(!tasks(r).length){h+='<div class="panel"><p style="margin:0">Les cours, quiz et dilemmes de ce concours sont en cours de rédaction : le plan de révision sera disponible dès leur publication.</p></div>'+saveBox()+'</div>';return h;}
+  h+=(p&&!editing)?planView(r,p):form(r,editing?p:null);
+  h+=saveBox();
+  h+='<p class="muted" style="font-size:14px">Raccourci : Alt + R ouvre cet onglet. Tout reste sur cet appareil, sans compte et sans connexion.</p></div>';
+  return h;}
+function homeView(){var ids={};Object.keys(S.plans).forEach(function(k){ids[k]=1;});Object.keys(S.cards).forEach(function(k){if(!S.cards[k].ok&&!S.cards[k].x)ids[S.cards[k].r]=1;});
+  var l=D.filter(function(r){return ids[r.id];});if(!l.length)return "";
+  var td=today(),tot=0;
+  var items=l.map(function(r){var n=dueCount(r.id);tot+=n;var p=S.plans[r.id],j=p?parseDay(p.date)-td:null;
+    return '<li><button type="button" class="btn ghost small" data-revgo="'+e_(r.id)+'">'+e_(r.metier)+'</button> '+(n?n+" question(s) à revoir aujourd’hui":"rien à revoir aujourd’hui")+(p?(j>=0?", concours dans "+j+" jour"+(j>1?"s":""):", date du concours passée"):"")+'</li>';}).join("");
+  return '<section class="panel" data-rev-ui="1" id="revHome" aria-labelledby="revHomeT" tabindex="-1"><h2 id="revHomeT" style="margin-top:0;font-size:18px">À revoir aujourd’hui : '+tot+' question'+(tot>1?"s":"")+'</h2>'+warnings()+(items?'<ul class="rev-list">'+items+'</ul>':"")+'<p class="muted" style="margin:6px 0 0;font-size:14px">Ouvrez un concours puis l’onglet « Réviser » (Alt + R) pour suivre votre plan et revoir vos questions.</p></section>';}
+
+/* ---------- branchements ---------- */
+function after(){if(dead)return;
+  if(window.DOKIREV_TEST_THROW==="render")throw new Error("test render");
+  var app=document.getElementById("app");if(!app)return;
+  if(!R){var old=document.getElementById("revHome");if(old)old.remove();var hv=homeView();if(hv){var first=app.querySelector(".panel");if(first)first.insertAdjacentHTML("beforebegin",hv);else app.insertAdjacentHTML("beforeend",hv);}return;}
+  if(T===TAB[0]){if(lastT!==TAB[0]||lastR!==R){answered={};msg="";importBuf=null;}lastT=T;lastR=R;var ae=document.activeElement,fid=ae&&ae.closest&&ae.closest("#revRoot")&&ae.id?ae.id:null;var o=document.getElementById("revRoot");if(o)o.remove();var tb=app.querySelector(".tabs");var html=tabView(R);if(tb)tb.insertAdjacentHTML("afterend",html);else app.insertAdjacentHTML("beforeend",html);if(fid){var fe=document.getElementById(fid);if(fe)fe.focus({preventScroll:true});}return;}
+  lastT=T;lastR=R;
+  if(T==="quiz"&&loaded(R))decorateQuiz(R);}
+function decorateQuiz(r){var n=dueCount(r.id);var tb=document.querySelector("#app .tabs");
+  if(tb&&!document.getElementById("revQuizInfo")){tb.insertAdjacentHTML("afterend",'<p class="panel" data-rev-ui="1" id="revQuizInfo" style="margin:8px 0">'+(n?n+" question(s) à revoir aujourd’hui. ":"")+'Vos erreurs de quiz sont reposées automatiquement dans l’onglet <button type="button" class="linkish" data-rvtab="1">Réviser</button>.</p>');}
+  document.querySelectorAll("#app details[data-qz]").forEach(function(det){var z=r.quiz[+det.dataset.qz];if(!z)return;
+    det.querySelectorAll(":scope>fieldset").forEach(function(fs,k){if(fs.querySelector("[data-rvmark]"))return;var q=z.qs[k];if(!q)return;var key=cardKey(r.id,z.k,hash(q.q)),c=S.cards[key],on=!!(c&&!c.ok&&!c.x);
+      var b=document.createElement("button");b.type="button";b.className="btn ghost small rev-mark";b.setAttribute("data-rv","mark");b.setAttribute("data-rvmark","1");b.setAttribute("data-k",key);b.setAttribute("data-zi",det.dataset.qz+":"+k);b.setAttribute("aria-pressed",on?"true":"false");b.setAttribute("data-rev-ui","1");b.textContent=on?"✓ À revoir":"À revoir";b.setAttribute("aria-label","Marquer la question "+(k+1)+" à revoir");
+      var p=fs.querySelector("p");if(p)fs.insertBefore(b,p);else fs.appendChild(b);});});}
+function rerenderTab(focusSel){if(!R||T!==TAB[0])return;var o=document.getElementById("revRoot");if(!o)return;
+  var ae=document.activeElement,fid=focusSel||(ae&&ae.id?"#"+ae.id:(ae&&ae.dataset&&ae.dataset.rv?'[data-rv="'+ae.dataset.rv+'"]':null));
+  var y=scrollY;o.outerHTML=tabView(R);scrollTo(0,y);
+  if(fid){try{var el=document.querySelector(fid);if(el){var dt=el.closest("details");if(dt)dt.open=true;el.focus({preventScroll:true});}}catch(e){}}}
+function openItem(spec){var a=spec.split(":"),t=a[0],i=+a[1];var map={c:"cours",q:"quiz",d:"dilemmes",o:"oral"};T=map[t]||"cours";render();scrollTo(0,0);
+  setTimeout(function(){try{var el=null;if(t==="c")el=document.querySelectorAll("#app details:not([data-qz]):not(.dil):not(.rev-week)")[i];
+    else if(t==="q")el=document.querySelector('#app details[data-qz="'+i+'"]');
+    else if(t==="d"){var d=R.dils[i];el=d&&document.querySelector('#app details.dil[data-id="'+(window.CSS&&CSS.escape?CSS.escape(d.id):d.id)+'"]');}
+    if(el){el.open=true;var s=el.querySelector("summary");if(s){s.focus();s.scrollIntoView({block:"start"});}}else{var h=document.querySelector("#app h1");if(h){h.tabIndex=-1;h.focus();}}}catch(e){}},60);}
+function goTab(){if(!R)return;T=TAB[0];render();setTimeout(function(){var h=document.getElementById("revTitle");if(h){h.focus();}},30);}
+function doExport(){var o={app:"Dokimasia",kind:"revision",version:VER,date:new Date().toISOString(),data:S};
+  var name="Dokimasia-revision-"+isoDay(today())+".json",txt=JSON.stringify(o,null,1);
+  /* iPhone : le lien de téléchargement échoue souvent en mode installé, on passe par le menu Partager */
+  try{if(isIOS&&window.File&&navigator.canShare){var file=new File([txt],name,{type:"application/json"});if(navigator.canShare({files:[file]})){navigator.share({files:[file],title:name}).catch(function(){});msg="Choisissez « Enregistrer dans Fichiers » pour garder la sauvegarde.";return;}}}catch(e){}
+  var b=new Blob([txt],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){try{URL.revokeObjectURL(a.href);}catch(e){}},4000);
+  msg="Fichier exporté. Gardez-le en lieu sûr (Fichiers, iCloud, clé USB…).";}
+function readImport(f){if(!f)return;if(f.size>5e6){msg="Fichier trop volumineux pour une sauvegarde Dokimasia.";rerenderTab();say(msg);return;}
+  var fr=new FileReader();fr.onload=function(){try{var o=JSON.parse(fr.result);if(!obj(o)||o.app!=="Dokimasia"||o.kind!=="revision"||!obj(o.data))throw 0;
+      var wasRO=readOnly;var d=migrate(o.data);readOnly=wasRO;
+      if(num(o.data.v,0)>VER)throw 1;
+      importBuf={d:d,np:Object.keys(d.plans).length,nc:Object.keys(d.cards).length,date:(o.date?String(o.date).slice(0,10):"date inconnue")};msg="";rerenderTab('[data-rv="merge"]');say("Fichier valide. Choisissez fusionner ou remplacer.");}
+    catch(e){importBuf=null;msg=e===1?"Ce fichier vient d’une version plus récente de Dokimasia : mettez l’application à jour.":"Ce fichier n’est pas une sauvegarde de révision Dokimasia valide. Rien n’a été modifié.";rerenderTab();say(msg);}};
+  fr.onerror=function(){msg="Lecture du fichier impossible.";rerenderTab();say(msg);};fr.readAsText(f);}
+function doMerge(d){Object.keys(d.plans).forEach(function(k){var a=S.plans[k],b=d.plans[k];if(!a){S.plans[k]=b;return;}var w=(b.upd||0)>(a.upd||0)?b:a,o=w===a?b:a;
+    Object.keys(o.done).forEach(function(t){if(w.done[t]==null)w.done[t]=o.done[t];});S.plans[k]=w;});
+  Object.keys(d.cards).forEach(function(k){var a=S.cards[k],b=d.cards[k];if(!a||(b.t||0)>(a.t||0))S.cards[k]=b;});}
+
+document.addEventListener("click",function(e){if(dead)return;try{
+  var b=e.target.closest&&e.target.closest("button");if(!b)return;
+  if(b.dataset.revgo){R=D.find(function(r){return r.id===b.dataset.revgo;})||null;if(!R)return;try{L.ref=R.id;W();}catch(_){}scrollTo(0,0);goTab();return;}
+  if(b.dataset.rvtab){goTab();return;}
+  if(b.dataset.open){openItem(b.dataset.open);return;}
+  if(b.dataset.corr!==undefined&&R&&loaded(R)){var z=R.quiz[+b.dataset.corr],box=b.closest("details");if(!z||!box)return;var nf=0;
+    box.querySelectorAll(":scope>fieldset").forEach(function(f,k){var q=z.qs[k];if(!q)return;var c=f.querySelector("input:checked");if(!c)return;var key=cardKey(R.id,z.k,hash(q.q));
+      if(+c.value!==q.bonne){failFromQuiz(R,z,q);nf++;}else if(S.cards[key]&&!S.cards[key].ok&&S.cards[key].due<=today())grade(key,true,"quiz");});
+    if(nf)askPersist();save();var info=document.getElementById("revQuizInfo");if(info)info.remove();
+    document.querySelectorAll("[data-rvmark]").forEach(function(x){x.remove();});decorateQuiz(R);
+    if(nf)say(nf+" question(s) ratée(s) ajoutée(s) à « À revoir aujourd’hui », dans l’onglet Réviser.");return;}
+  var a=b.dataset.rv;if(!a)return;
+  if(readOnly&&/^(mark|check|remove|delplan|edit)$/.test(a)){say("Progression en lecture seule : aucune modification possible.");return;}
+  if(a==="mark"){var k=b.dataset.k,c=S.cards[k],on=c&&!c.ok&&!c.x;
+    if(on){c.ok=1;c.m=0;c.t=Date.now();}else if(c){c.ok=0;c.x=0;c.b=0;c.m=1;c.due=today();c.t=Date.now();}else{var zi=b.dataset.zi.split(":"),z2=R.quiz[+zi[0]],q2=z2&&z2.qs[+zi[1]];if(!q2)return;var h=hash(q2.q);S.cards[k]={r:R.id,z:z2.k,h:h,b:0,due:today(),n:0,l:0,t:Date.now(),m:1,x:0,ok:0};askPersist();}
+    save();on=!on;b.setAttribute("aria-pressed",on?"true":"false");b.textContent=on?"✓ À revoir":"À revoir";say(on?"Question ajoutée à la révision.":"Question retirée de la révision.");return;}
+  if(a==="check"){var k3=b.dataset.k,card=b.closest("[data-card]"),sel=card&&card.querySelector("input:checked");if(!sel){say("Choisissez d’abord une réponse.");return;}
+    var x=findQ(R,S.cards[k3]);if(!x)return;var ok=+sel.value===x.q.bonne;grade(k3,ok,"rev");answered[k3]={v:+sel.value,ok:ok};save();
+    rerenderTab();var cc=null;document.querySelectorAll("[data-card]").forEach(function(el){if(el.dataset.card===k3)cc=el.querySelector("legend");});if(cc){cc.tabIndex=-1;cc.focus({preventScroll:true});}
+    say((ok?"Bonne réponse. ":"Réponse inexacte. ")+(x.q.explication||""));return;}
+  if(a==="remove"){if(!confirm("Retirer cette question de la révision ?"))return;delete S.cards[b.dataset.k];save();rerenderTab("#revQ");say("Question retirée.");return;}
+  if(a==="edit"){editing=true;rerenderTab("#revDate");return;}
+  if(a==="cancelEdit"){editing=false;rerenderTab("#revTitle");return;}
+  if(a==="delplan"){if(!confirm("Supprimer le plan de révision de ce concours ? Les questions à revoir sont conservées."))return;delete S.plans[R.id];save();rerenderTab("#revDate");say("Plan supprimé.");return;}
+  if(a==="export"){doExport();rerenderTab('[data-rv="export"]');say(msg);return;}
+  if(a==="import"){var fi=document.querySelector("[data-rev-file]");if(fi)fi.click();return;}
+  if(a==="impcancel"){importBuf=null;msg="Import annulé.";rerenderTab('[data-rv="import"]');say(msg);return;}
+  if(a==="merge"||a==="replace"){if(!importBuf)return;
+    if(a==="replace"&&!confirm("Remplacer toute votre progression de révision par ce fichier ? Votre progression actuelle sera perdue (exportez-la d’abord si besoin)."))return;
+    if(a==="replace"){S=importBuf.d;}else doMerge(importBuf.d);importBuf=null;
+    if(a==="replace"&&corrupt){readOnly=false;corrupt=false;}msg=save()?(a==="replace"?"Progression remplacée.":"Progression fusionnée."):readOnly?"Importé pour cette visite seulement : la progression est en lecture seule.":"Importé pour cette visite seulement : le stockage de ce navigateur est indisponible.";
+    rerenderTab('[data-rv="import"]');say(msg);return;}
+}catch(err){kill(err);}});
+document.addEventListener("change",function(e){if(dead)return;try{var t=e.target;
+  if(t.matches&&t.matches("[data-rev-file]")){readImport(t.files&&t.files[0]);t.value="";return;}
+  if(t.matches&&t.matches("[data-task]")&&R){var p=S.plans[R.id];if(!p)return;if(readOnly){t.checked=!t.checked;say("Progression en lecture seule : aucune modification possible.");return;}var id=t.dataset.task;
+    if(t.checked)p.done[id]=today();else delete p.done[id];p.upd=Date.now();save();askPersist();
+    var c=compute(R,p);rerenderTab("#"+t.id);
+    say((t.checked?"Activité cochée. ":"Activité décochée. ")+"Plan réajusté : "+c.done.length+" sur "+c.all.length+" faites.");}
+}catch(err){kill(err);}});
+document.addEventListener("submit",function(e){if(dead)return;var f=e.target;if(!f.matches||!f.matches("[data-rev-form]"))return;e.preventDefault();try{
+  var d=parseDay(f.querySelector("#revDate").value),hv=parseFloat(String(f.querySelector("#revH").value).replace(",",".")),err=f.querySelector("#revErr"),td=today();
+  var bad=isNaN(d)?"Indiquez la date du concours.":d<=td?"La date du concours doit être après aujourd’hui.":d-td>3650?"Date trop lointaine.":!(hv>=0.5&&hv<=80)?"Indiquez un temps hebdomadaire entre 0,5 et 80 heures.":"";
+  if(bad){err.textContent=bad;var inp=f.querySelector(isNaN(d)||d<=td||d-td>3650?"#revDate":"#revH");inp.setAttribute("aria-invalid","true");inp.focus();return;}
+  S.plans[R.id]=newPlan(R,d,hv);S.plans[R.id].upd=Date.now();editing=false;var ok=save();askPersist();rerenderTab("#revCW");
+  var c=compute(R,S.plans[R.id]);say("Plan "+(ok?"enregistré":"créé pour cette visite")+" : "+c.all.length+" activités, environ "+hm(c.tot)+", jusqu’au "+fdate(d)+".");
+}catch(err){kill(err);}},true);
+document.addEventListener("keydown",function(e){if(dead)return;try{if(e.altKey&&!e.ctrlKey&&!e.metaKey&&e.code==="KeyR"&&!(e.target&&e.target.closest&&e.target.closest("input,textarea,select,[contenteditable]"))){e.preventDefault();if(R)goTab();else{var h=document.getElementById("revHome");if(h)h.focus();else say("Ouvrez d’abord un concours pour accéder à l’onglet Réviser.");}}}catch(err){kill(err);}});
+
+/* raccourci documenté */
+try{var ul=document.querySelector("#a11yKeys ul");if(ul){var li=document.createElement("li");li.setAttribute("data-rev-ui","1");li.innerHTML="<b>Alt + R</b> : ouvrir l’onglet Réviser (plan de révision et questions à revoir).";ul.appendChild(li);}}catch(e){}
+
+/* onglet + enveloppe de render() */
+var pi=TABS.findIndex(function(t){return t[0]==="plan";});if(pi>=0)TABS.splice(pi,0,TAB);else TABS.push(TAB);
+origRender=render;
+render=function(){origRender.apply(this,arguments);try{after();}catch(err){kill(err);}};
+window.DokiRev={store:function(){return S;},key:KEY};
+render();
+}catch(err){kill(err);}
+})();
+</script></body></html>
