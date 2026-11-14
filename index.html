@@ -978,4 +978,98 @@ decorate();
 window.DokiDL={version:version};
 }catch(err){kill(err);}
 })();
-</script></body></html>
+</script><style id="sm-css">
+/* Saisie mobile : pas de zoom iOS (16px), grandes zones tactiles, dates pré-formatées. */
+input,select,textarea{font-size:16px!important}
+button,.btn,[role=button]{min-height:44px}
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]){min-height:44px}
+input[type=checkbox],input[type=radio]{width:22px;height:22px}
+.sm-date{display:flex;gap:6px;align-items:stretch}
+.sm-date input.sm-txt{flex:1;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.sm-date button{flex:none;min-width:44px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:18px;cursor:pointer;padding:0 8px}
+.sm-native{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;pointer-events:none!important;overflow:hidden}
+input.sm-txt[aria-invalid=true]{background:#fde8e6}
+@media (max-width:640px){
+ .tp-saisie{overflow:visible!important}.tp-saisie table{min-width:0!important}
+ .tp-saisie table,.tp-saisie tbody,.tp-saisie tfoot{display:block;width:100%}
+ .tp-saisie caption{display:block;text-align:left;font-weight:700;margin-bottom:6px}
+ .tp-saisie td.tp-n,.tp-saisie td[data-l]::before{text-align:left!important}
+ .tp-saisie input{width:100%!important;box-sizing:border-box}
+ .tp-saisie thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+ .tp-saisie tbody tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;padding:8px;margin:0 0 10px}
+ .tp-saisie tbody td{display:block;border:0;padding:0}
+ .tp-saisie tbody td[data-l]::before{content:attr(data-l);display:block;font-size:13px;font-weight:600;color:var(--muted,#555)}
+ .tp-saisie tbody td.sm-wide{grid-column:1/-1}
+ .tp-saisie tbody input{border:1px solid var(--line,#ccc)!important;background:var(--bg,#fff)!important}
+ .tp-saisie tfoot tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 8px;padding:8px;border-radius:8px}
+ .tp-saisie tfoot th{grid-column:1/-1}
+ .tp-saisie tfoot td{display:block;border:0}
+}
+</style>
+<script id="sm-js">
+/* Saisie mobile (dates jj/mm/aaaa avec / insérés automatiquement, Entrée = champ suivant, montants, écart proposé). */
+(function(){
+function digits(s){return String(s||"").replace(/\D/g,"");}
+function maskDate(raw){var d=digits(raw);
+ if(d.length>=1&&+d[0]>3)d="0"+d; if(d.length>=3&&+d[2]>1)d=d.slice(0,2)+"0"+d.slice(2);
+ d=d.slice(0,8);var o=d.slice(0,2);if(d.length>2)o+="/"+d.slice(2,4);if(d.length>4)o+="/"+d.slice(4);
+ if(d.length===2||d.length===4)o+="/";return o;}
+function finishDate(v){var d=digits(v);if(!d)return"";var y=new Date().getFullYear();
+ if(d.length===4)d+=y; else if(d.length===6)d=d.slice(0,4)+"20"+d.slice(4);
+ if(d.length!==8)return null;var j=+d.slice(0,2),m=+d.slice(2,4),a=+d.slice(4),t=new Date(a,m-1,j);
+ if(t.getFullYear()!==a||t.getMonth()!==m-1||t.getDate()!==j)return null;return d.slice(0,2)+"/"+d.slice(2,4)+"/"+d.slice(4);}
+function toISO(f){return f?f.slice(6)+"-"+f.slice(3,5)+"-"+f.slice(0,2):"";}
+function fromISO(i){var m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(i||"");return m?m[3]+"/"+m[2]+"/"+m[1]:"";}
+function fire(el,t){el.dispatchEvent(new Event(t,{bubbles:true}));}
+function isDateTxt(el){return el&&el.tagName==="INPUT"&&(el.classList.contains("sm-txt")||/_date$/.test((el.dataset&&el.dataset.k)||"")||el.dataset.mask==="date");}
+function fields(scope){return Array.prototype.filter.call((scope||document).querySelectorAll("input,select,textarea"),function(x){return !x.disabled&&!x.readOnly&&x.type!=="hidden"&&x.type!=="file"&&!x.classList.contains("sm-native")&&x.offsetParent!==null;});}
+function next(el){var sc=el.closest(".tp-saisie,form,.panel,.card,section")||document,f=fields(sc),i=f.indexOf(el);
+ if(i>=0&&i<f.length-1){f[i+1].focus();if(f[i+1].select)try{f[i+1].select()}catch(e){}return true;}el.blur();return false;}
+/* Remplace chaque <input type=date> par un champ texte jj/mm/aaaa + bouton calendrier ; le champ d'origine reste (caché) et reçoit la date ISO. */
+function wrapNative(n){if(n.dataset.smDone)return;n.dataset.smDone="1";
+ var w=document.createElement("span");w.className="sm-date";var t=document.createElement("input");
+ t.type="text";t.className="sm-txt";t.inputMode="numeric";t.autocomplete="off";t.placeholder="jj/mm/aaaa";t.maxLength=10;t.enterKeyHint="next";
+ t.value=fromISO(n.value);if(n.required)t.required=true;
+ var lab=n.id&&document.querySelector('label[for="'+n.id+'"]');if(lab){t.setAttribute("aria-label",lab.textContent.trim()+" (jj/mm/aaaa)");}
+ else if(n.getAttribute("aria-label"))t.setAttribute("aria-label",n.getAttribute("aria-label"));
+ if(n.getAttribute("aria-describedby"))t.setAttribute("aria-describedby",n.getAttribute("aria-describedby"));
+ var b=document.createElement("button");b.type="button";b.textContent="📅";b.setAttribute("aria-label","Ouvrir le calendrier");
+ b.onclick=function(){try{n.showPicker()}catch(e){n.focus();}};
+ n.parentNode.insertBefore(w,n);w.appendChild(t);w.appendChild(b);w.appendChild(n);n.classList.add("sm-native");n.tabIndex=-1;n.setAttribute("aria-hidden","true");
+ t._native=n;n.addEventListener("change",function(){if(!n._smSync)t.value=fromISO(n.value);});
+ if(lab&&n.id){lab.htmlFor="";lab.addEventListener("click",function(){t.focus();});}}
+function syncNative(t,final){var n=t._native;if(!n)return;var f=finishDate(t.value);
+ if(final&&f){t.value=f;}var iso=f?toISO(f):"";if(n.value!==iso||final){n._smSync=1;n.value=iso;fire(n,"input");if(final)fire(n,"change");n._smSync=0;}}
+function decorate(root){root=root||document;
+ root.querySelectorAll('input[type=date]:not([data-sm-done])').forEach(wrapNative);
+ root.querySelectorAll('input[data-ecr]').forEach(function(i){if(i.dataset.smD)return;i.dataset.smD="1";var k=i.dataset.k.split("_")[1];
+  i.enterKeyHint="next";
+  if(k==="date"){i.inputMode="numeric";i.maxLength=10;i.placeholder="jj/mm/aaaa";}
+  if(k==="libelle"){i.setAttribute("autocapitalize","sentences");}
+  var td=i.closest("td");if(td){var lb={date:"Date",compte:"Compte",libelle:"Libellé",debit:"Débit",credit:"Crédit"}[k];if(lb)td.setAttribute("data-l",lb);if(k==="libelle")td.classList.add("sm-wide");}});
+ root.querySelectorAll('input[type=number]:not([inputmode])').forEach(function(i){i.inputMode="decimal";});
+ root.querySelectorAll('input:not([enterkeyhint])').forEach(function(i){if(i.type!=="checkbox"&&i.type!=="radio"&&i.type!=="search")i.enterKeyHint="next";});}
+document.addEventListener("input",function(e){var t=e.target;if(!isDateTxt(t))return;
+ var del=e.inputType&&e.inputType.indexOf("delete")===0;var v=t.value;
+ if(del){if(/\/$/.test(v))t.value=v.slice(0,-1);}else{var m=maskDate(v);if(m!==v){t.value=m;}}
+ if(t._native)syncNative(t,false);
+ if(!del&&digits(t.value).length===8){var f=finishDate(t.value);t.setAttribute("aria-invalid",f?"false":"true");if(f){if(t._native)syncNative(t,true);setTimeout(function(){next(t);},30);}}},true);
+document.addEventListener("blur",function(e){var t=e.target;if(!isDateTxt(t)||!t.value)return;var f=finishDate(t.value);
+ if(f){t.removeAttribute("aria-invalid");if(f!==t.value){t.value=f;fire(t,"input");}}else t.setAttribute("aria-invalid","true");
+ if(t._native)syncNative(t,true);},true);
+/* Saisie au journal : date reprise de la ligne du dessus, et écart proposé dans la colonne qui manque. */
+document.addEventListener("focus",function(e){var t=e.target;if(!t||!t.dataset||!t.dataset.ecr||t.value)return;var p=t.dataset.k.split("_"),r=+p[0],k=p[1],box=t.closest(".tp-saisie");if(!box)return;
+ function val(rr,kk){var x=box.querySelector('input[data-k="'+rr+"_"+kk+'"]');return x?x.value.trim():"";}
+ if(k==="date"&&r>0){var up=val(r-1,"date");if(up){t.value=up;fire(t,"input");setTimeout(function(){try{t.select()}catch(x){}},0);}return;}
+ if((k==="debit"||k==="credit")&&!val(r,k==="debit"?"credit":"debit")&&(val(r,"compte")||r>0)){
+  var d=0,c=0,N=window.tpNum||function(s){return parseFloat(String(s).replace(/\s/g,"").replace(",","."))||0;};
+  box.querySelectorAll("input[data-ecr]").forEach(function(i){var kk=i.dataset.k.split("_")[1];var x=N(i.value);if(isNaN(x))return;if(kk==="debit")d+=x;if(kk==="credit")c+=x;});
+  var gap=Math.round((k==="credit"?d-c:c-d)*100)/100;if(gap>0){t.value=window.tpEuro?tpEuro(gap).replace(/\u00a0€$/,""):String(gap.toFixed(2)).replace(".",",");fire(t,"input");setTimeout(function(){try{t.select()}catch(x){}},0);}}},true);
+document.addEventListener("keydown",function(e){var t=e.target;if(e.key!=="Enter"||!t||t.tagName!=="INPUT"||t.type==="search"||t.type==="checkbox"||t.type==="radio"||t.type==="submit")return;
+ if(t.closest("form")&&!t.closest(".tp-saisie")&&!t.classList.contains("sm-txt"))return;e.preventDefault();if(isDateTxt(t))fire(t,"blur");if(t.dataset.ecr){var p=t.dataset.k.split("_");if(p[1]==="debit"&&t.value.trim()){fire(t,"change");var nx=t.closest(".tp-saisie").querySelector('input[data-k="'+(+p[0]+1)+'_date"]');if(nx){nx.focus();return;}}if(p[1]==="debit"||p[1]==="credit")fire(t,"change");}next(t);});
+var pend=false;new MutationObserver(function(){if(pend)return;pend=true;setTimeout(function(){pend=false;decorate();},0);}).observe(document.documentElement,{childList:true,subtree:true});
+if(document.readyState!=="loading")decorate();else document.addEventListener("DOMContentLoaded",function(){decorate();});
+window.SaisieMobile={maskDate:maskDate,finishDate:finishDate};
+})();
+</script>
+</body></html>
