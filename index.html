@@ -791,4 +791,191 @@ d.addEventListener("keydown",safe(function(e){var c=cur();if(!c)return;var t=e.t
 on=true;
 }catch(err){try{if(X)X.hook=null;console.info("ttsclick désactivé",err&&err.message)}catch(_){}}
 })();
+</script><!-- DOKIDL-MODULE v2 --><style id="dokidl-css">.dl-bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.dl-bar button,.dl-all button{min-height:40px}
+.dl-bar button:focus-visible,.dl-all button:focus-visible{outline:3px solid var(--accent,#1b4d8c);outline-offset:2px}
+#dlprint{display:none}
+@media print{
+body.dl-printing>*:not(#dlprint){display:none!important}
+body.dl-printing{background:#fff!important;color:#000!important;margin:0!important;padding:0!important}
+body.dl-printing #dlprint{display:block!important;font:13pt/1.55 Georgia,"Times New Roman",serif;color:#000}
+@page{margin:18mm 16mm}
+#dlprint h1{font:700 22pt/1.2 system-ui,sans-serif;margin:4pt 0 14pt}
+#dlprint h2{font:700 16pt/1.25 system-ui,sans-serif;margin:18pt 0 6pt}
+#dlprint h3{font:700 14pt/1.3 system-ui,sans-serif;margin:14pt 0 5pt}
+#dlprint h4,#dlprint h5,#dlprint h6{font:700 13pt/1.3 system-ui,sans-serif;margin:12pt 0 4pt}
+#dlprint h1,#dlprint h2,#dlprint h3,#dlprint h4,#dlprint h5,#dlprint h6{break-after:avoid;page-break-after:avoid;break-inside:avoid;page-break-inside:avoid}
+#dlprint p,#dlprint li{orphans:3;widows:3;margin:0 0 7pt}
+#dlprint ul,#dlprint ol{margin:0 0 8pt;padding-left:20pt}
+#dlprint li{break-inside:avoid;page-break-inside:avoid}
+#dlprint .dlp-head{break-inside:avoid;page-break-inside:avoid;border-bottom:1.5pt solid #000;margin-bottom:12pt}
+#dlprint .dlp-k,#dlprint .dlp-mod{font:600 11.5pt/1.4 system-ui,sans-serif;margin:0 0 3pt}
+#dlprint .dlp-simple{border:1pt solid #555;padding:4pt 12pt 6pt;margin:0 0 14pt}
+#dlprint .dlp-simple h2{margin-top:6pt}
+#dlprint .dlp-ch+.dlp-ch,#dlprint .dlp-cover+.dlp-ch{break-before:page;page-break-before:always}
+#dlprint .dlp-foot{margin-top:20pt;border-top:1pt solid #000;padding-top:6pt;font:10.5pt/1.4 system-ui,sans-serif;break-inside:avoid;page-break-inside:avoid}
+#dlprint a{color:#000;text-decoration:none}
+}
+.dl-open{display:inline-block;margin:6px 0;font-weight:600}
+</style><script id="dokidl-js">/* Dokimasia : module « Télécharger le cours » (PDF par impression, texte brut .txt).
+   Module isolé : tout est dans try/catch. S'il échoue, il retire ses boutons et se désactive ;
+   le reste de l'application ne change pas. Il n'enveloppe pas render() : il observe #app
+   et ajoute ses boutons (marqués data-dl-ui) aux chapitres de l'onglet Cours.
+   Lit les globals R, T, D (lecture seule). Le contenu imprimé est reconstruit à partir des
+   données du cours (pas du DOM affiché), donc indépendant des chapitres repliés et de la lecture vocale.
+   Réglage de test : window.DOKIDL_TEST_THROW ("init" ou "run"). */
+(function(){
+"use strict";
+var dead=false,obs=null,APP_URL="https://kamattou-web.github.io/dokimasia/",BUILD="2026-11-14",verDate=null;
+function kill(e){
+  if(dead)return;dead=true;
+  try{if(window.console&&console.warn)console.warn("Module Télécharger désactivé :",e&&e.message||e);}catch(_){}
+  try{if(obs)obs.disconnect();}catch(_){}
+  try{var x=document.querySelectorAll("[data-dl-ui]");for(var i=0;i<x.length;i++)x[i].remove();}catch(_){}
+  try{document.body.classList.remove("dl-printing");}catch(_){}
+}
+try{
+if(window.DOKIDL_TEST_THROW==="init")throw new Error("test init");
+if(typeof D==="undefined"||!document.getElementById("app"))return;
+if(window.__dokiDL)return;window.__dokiDL=1;
+
+var e_=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+var MOIS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+function fd(iso){var m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||"");return m?(+m[3])+" "+MOIS[+m[2]-1]+" "+m[1]:"";}
+function version(){return fd(verDate||BUILD);}
+try{if(window.caches&&caches.keys)caches.keys().then(function(ks){ks.forEach(function(k){var m=/^dokimasia-v\d+-(\d{4}-\d\d-\d\d)$/.exec(k);if(m&&(!verDate||m[1]>verDate))verDate=m[1];});}).catch(function(){});}catch(_){}
+
+/* région annoncée aux lecteurs d'écran */
+var live=document.createElement("div");live.id="dlLive";live.className="sr";live.setAttribute("role","status");live.setAttribute("aria-live","polite");live.setAttribute("data-dl-ui","1");document.body.appendChild(live);
+function say(t){live.textContent="";setTimeout(function(){live.textContent=t;},60);}
+/* conteneur d'impression (invisible à l'écran et pour les lecteurs d'écran) */
+var pr=document.createElement("div");pr.id="dlprint";pr.setAttribute("data-dl-ui","1");pr.setAttribute("aria-hidden","true");document.body.appendChild(pr);
+
+function cur(){try{return R;}catch(_){return null;}}
+function tab(){try{return T;}catch(_){return "";}}
+function loaded(r){return r&&(!r.ext||r._ok)&&r.cours&&r.cours.length;}
+function words(r){var n=0;r.cours.forEach(function(c){n+=String(c.texte||"").split(/\s+/).length+String(c.simple||"").split(/\s+/).length;});return n;}
+function clean(s){return String(s||"").replace(/\*\*(.+?)\*\*/g,"$1").replace(/(^|[^*])\*(?!\s)(.+?)\*/g,"$1$2");}
+function inl(s){return e_(s).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/(^|[^*])\*(?!\s)(.+?)\*/g,"$1<em>$2</em>");}
+function same(a,b){return clean(a).trim().toLowerCase()===clean(b).trim().toLowerCase();}
+
+/* ---------- HTML imprimable ---------- */
+function mdP(t,title,base){var h="",st=[],first=true;
+  function close(d){d=d||0;while(st.length>d){h+="</li></"+st.pop().t+">";}}
+  function item(tag,ind,txt){while(st.length&&ind<st[st.length-1].i)h+="</li></"+st.pop().t+">";var top=st[st.length-1];
+    if(top&&ind===top.i&&top.t!==tag){h+="</li></"+st.pop().t+">";top=st[st.length-1];}
+    if(top&&ind<=top.i){h+="</li><li>"+txt;return;}
+    h+="<"+tag+"><li>"+txt;st.push({t:tag,i:ind});}
+  var list=null;
+  String(t||"").split("\n").forEach(function(raw){var ind=raw.match(/^\s*/)[0].replace(/\t/g,"    ").length,l=raw.trim();var m=/^(#{1,4})\s+(.*)$/.exec(l);
+    if(m){close();var lv=m[1].length;if(lv===1&&first&&title&&same(m[2],title)){first=false;return;}first=false;var n=Math.min(6,base+Math.max(0,lv-2));h+="<h"+n+">"+inl(m[2])+"</h"+n+">";return;}
+    first=false;
+    if(/^[-*]\s/.test(l))item("ul",ind,inl(l.slice(2)));
+    else if(/^\d+[.)]\s/.test(l))item("ol",ind,inl(l.replace(/^\d+[.)]\s/,"")));
+    else if(!l)close();else if(st.length&&ind>0)h+="<br>"+inl(l);else{close();h+="<p>"+inl(l)+"</p>";}});
+  close();return h;}
+function chHTML(r,c){return '<article class="dlp-ch"><header class="dlp-head"><p class="dlp-k">Dokimasia · '+e_(r.metier)+'</p><p class="dlp-mod">Module : '+e_(c.m)+'</p><h1>'+e_(c.t)+'</h1></header>'+
+  (c.simple?'<section class="dlp-simple"><h2>Comprendre simplement</h2>'+mdP(c.simple,null,3)+'</section><h2>Le cours complet</h2>':"")+
+  mdP(c.texte,c.t,2)+'</article>';}
+function foot(){return '<footer class="dlp-foot"><p>Dokimasia, accès libre. Version du '+e_(version())+'. '+e_(APP_URL)+'</p><p>Synthèse de travail tirée des textes officiels et des rapports de jury publics, à vérifier quand une référence est signalée « à vérifier ».</p></footer>';}
+
+var lastBtn=null,oldTitle=null,clearT=null;
+function doPrint(html,title,msg){
+  if(clearT){clearTimeout(clearT);clearT=null;}
+  pr.innerHTML=html+foot();
+  oldTitle=document.title;document.title=title;
+  document.body.classList.add("dl-printing");
+  pendMsg=msg;
+  try{window.print();}catch(err){say("L’impression n’est pas disponible sur cet appareil. Utilisez le bouton « .txt ».");done();return;}
+  if(!guard)guard=setTimeout(function(){guard=null;if(document.body.classList.contains("dl-printing"))done();},60000);
+}
+var pendMsg="",guard=null;
+function done(){try{if(!document.body.classList.contains("dl-printing"))return;if(guard){clearTimeout(guard);guard=null;}document.body.classList.remove("dl-printing");if(pendMsg){say(pendMsg);pendMsg="";}if(oldTitle!==null){document.title=oldTitle;oldTitle=null;}
+  clearT=setTimeout(function(){if(!document.body.classList.contains("dl-printing"))pr.innerHTML="";},1500);}catch(err){kill(err);}}
+window.addEventListener("afterprint",function(){if(!dead)done();});
+try{var mq=window.matchMedia&&matchMedia("print");if(mq){var f=function(m){if(!dead&&!m.matches)setTimeout(done,300);};if(mq.addEventListener)mq.addEventListener("change",f);else if(mq.addListener)mq.addListener(f);}}catch(_){}
+document.addEventListener("pointerdown",function(){if(!dead)setTimeout(done,0);},true);
+document.addEventListener("visibilitychange",function(){if(!dead&&document.visibilityState==="visible")setTimeout(done,500);});
+
+/* ---------- texte brut ---------- */
+function mdT(t,title){var out=[],first=true;
+  String(t||"").split("\n").forEach(function(raw){var ind=raw.match(/^\s*/)[0].replace(/\t/g,"    ").length,pad=ind>=2?"  ".repeat(Math.min(3,Math.round(ind/2))):"",l=raw.trim();var m=/^(#{1,4})\s+(.*)$/.exec(l);
+    if(m){if(m[1].length===1&&first&&title&&same(m[2],title)){first=false;return;}first=false;var x=clean(m[2]);out.push("",m[1].length<=2?x.toUpperCase():x,"");return;}
+    first=false;
+    if(/^[-*]\s/.test(l))out.push(pad+"- "+clean(l.slice(2)));
+    else if(/^\d+[.)]\s/.test(l))out.push(pad+clean(l));
+    else if(l&&pad)out.push(pad+clean(l));
+    else if(!l)out.push("");else out.push(clean(l),"");});
+  return out;}
+function chTXT(r,c){var o=["Dokimasia – "+r.metier,"Module : "+c.m,"Chapitre : "+c.t,""];
+  if(c.simple){o.push("","COMPRENDRE SIMPLEMENT","");o=o.concat(mdT(c.simple));o.push("","LE COURS COMPLET","");}
+  o=o.concat(mdT(c.texte,c.t));return o;}
+function tidy(o){return o.join("\n").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim()+"\n";}
+function footTXT(){return ["","Dokimasia, accès libre. Version du "+version()+".",APP_URL];}
+function slug(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60)||"cours";}
+function isIOS(){var n=navigator;return /iPad|iPhone|iPod/.test(n.userAgent)||(n.platform==="MacIntel"&&n.maxTouchPoints>1);}
+function saveTxt(text,name,label){
+  var blob=new Blob(["\ufeff"+text],{type:"text/plain;charset=utf-8"});
+  if(isIOS()){
+    var f=null;try{f=new File([blob],name,{type:"text/plain"});}catch(_){}
+    if(f&&navigator.canShare&&navigator.share&&navigator.canShare({files:[f]})){
+      navigator.share({files:[f],title:label}).then(function(){say("Fichier texte partagé : "+name+".");}).catch(function(err){if(err&&err.name==="AbortError")say("Partage annulé.");else linkBlob(blob,name);});
+      say("Fichier texte prêt : choisissez « Enregistrer dans Fichiers » ou une application.");return;}
+    openBlob(blob,name);return;}
+  var u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;a.style.display="none";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(u);},30000);
+  say("Fichier texte téléchargé : "+name+".");}
+function linkBlob(blob,name){var u=URL.createObjectURL(blob),b=lastBtn&&lastBtn.closest(".dl-bar,.dl-all");if(!b){openBlob(blob,name);return;}
+  var o=b.querySelector(".dl-open");if(o)o.remove();var a=document.createElement("a");a.className="dl-open";a.href=u;a.textContent="Ouvrir le texte ("+name+")";a.setAttribute("data-dl-ui","1");b.appendChild(a);a.focus();say("Le partage n’a pas abouti. Touchez le lien « Ouvrir le texte » pour l’afficher.");}
+function openBlob(blob,name){if(window.navigator.standalone){var u0=URL.createObjectURL(blob);say("Ouverture du texte.");location.href=u0;return;}var u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener";a.style.display="none";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(u);},60000);say("Texte du cours ouvert dans un nouvel onglet : utilisez le bouton Partager pour l’enregistrer ("+name+").");}
+
+/* ---------- actions ---------- */
+function act(kind,i){var r=cur();if(!loaded(r))return;
+  if(kind==="pdf"||kind==="txt"){var c=r.cours[i];if(!c)return;
+    if(kind==="pdf")doPrint(chHTML(r,c),"Dokimasia – "+r.metier+" – "+c.t,"Impression du chapitre terminée ou fermée.");
+    else saveTxt(tidy(chTXT(r,c).concat(footTXT())),"dokimasia-"+slug(r.id)+"-"+slug(c.t)+".txt",c.t);
+    return;}
+  var n=words(r),pages=Math.round(n/330),box=document.querySelector(".dl-all .dl-conf");
+  if(kind==="allpdf"||kind==="alltxt"){if(!box)return;var mob=isIOS()||(window.matchMedia&&matchMedia("(pointer:coarse)").matches);
+    box.hidden=false;box.innerHTML='<p style="margin:8px 0">Attention : le cours complet fait environ '+n.toLocaleString("fr-FR")+' mots ('+r.cours.length+' chapitres'+(kind==="allpdf"?', environ '+pages+' pages imprimées':"")+').'+(kind==="allpdf"&&mob?' Sur un téléphone, la préparation du PDF peut être longue ; le fichier .txt est plus léger.':"")+'</p><button type="button" class="small" data-dl="'+kind+'-ok">Confirmer : '+(kind==="allpdf"?"PDF":".txt")+' du concours complet</button> <button type="button" class="ghost small" data-dl="all-no">Annuler</button>';
+    box.querySelector("button").focus();say("Confirmation demandée : environ "+n.toLocaleString("fr-FR")+" mots.");return;}
+  if(kind==="all-no"){if(box){box.hidden=true;box.innerHTML="";}say("Téléchargement annulé.");var q=document.querySelector(".dl-all [data-dl=allpdf]");if(q)q.focus();return;}
+  if(box){box.hidden=true;box.innerHTML="";}
+  if(kind==="allpdf-ok"){
+      var h='<section class="dlp-cover"><p class="dlp-k">Dokimasia · cours complet</p><h1>'+e_(r.metier)+'</h1><p>'+r.cours.length+' chapitres, environ '+n.toLocaleString("fr-FR")+' mots. Version du '+e_(version())+'. '+e_(APP_URL)+'</p><h2>Sommaire</h2><ol>'+r.cours.map(function(c){return "<li>"+e_(c.m)+" · "+e_(c.t)+"</li>";}).join("")+'</ol></section>'+r.cours.map(function(c){return chHTML(r,c);}).join("");
+      doPrint(h,"Dokimasia – "+r.metier+" – cours complet","Impression du concours complet terminée ou fermée.");}
+  else if(kind==="alltxt-ok"){var o=["Dokimasia – "+r.metier+" – cours complet",r.cours.length+" chapitres","","SOMMAIRE",""];r.cours.forEach(function(c,k){o.push((k+1)+". "+c.m+" · "+c.t);});
+    r.cours.forEach(function(c){o.push("","","==========","");o=o.concat(chTXT(r,c));});
+    saveTxt(tidy(o.concat(footTXT())),"dokimasia-"+slug(r.id)+"-cours-complet.txt",r.metier);}
+}
+document.addEventListener("click",function(ev){if(dead)return;var b=ev.target&&ev.target.closest&&ev.target.closest("[data-dl]");if(!b)return;
+  try{ev.preventDefault();lastBtn=b;act(b.getAttribute("data-dl"),+b.getAttribute("data-dli"));}catch(err){kill(err);}},false);
+
+/* ---------- boutons ---------- */
+function decorate(){if(dead)return;try{
+  if(window.DOKIDL_TEST_THROW==="run")throw new Error("test run");
+  var r=cur();if(tab()!=="cours"||!loaded(r))return;
+  var app=document.getElementById("app"),idx={};
+  r.cours.forEach(function(c,i){idx[c.m+" · "+c.t]=i;});
+  var ds=app.querySelectorAll(":scope > details");
+  for(var k=0;k<ds.length;k++){var d=ds[k];if(d.querySelector(":scope > .dl-bar"))continue;var s=d.querySelector(":scope > summary");if(!s)continue;
+    var st=s.textContent.trim(),i=idx[st];if(i===undefined){for(var kk in idx){if(st.indexOf(kk)>=0){i=idx[kk];break;}}}if(i===undefined)continue;var c=r.cours[i];
+    var bar=document.createElement("div");bar.className="dl-bar";bar.setAttribute("data-dl-ui","1");bar.setAttribute("role","group");bar.setAttribute("aria-label","Télécharger ce chapitre");
+    bar.innerHTML='<button type="button" class="ghost small" data-dl="pdf" data-dli="'+i+'" aria-label="Télécharger le cours en PDF : '+e_(c.t)+'">Télécharger le cours (PDF)</button> <button type="button" class="ghost small" data-dl="txt" data-dli="'+i+'" aria-label="Télécharger le cours en texte brut (.txt) : '+e_(c.t)+'">.txt</button>';
+    s.insertAdjacentElement("afterend",bar);}
+  if(!app.querySelector(".dl-all")){var ps=app.querySelectorAll(".panel"),prog=null;
+    for(var j=0;j<ps.length;j++){var h=ps[j].querySelector("h3");if(h&&h.textContent.trim()==="Programme"){prog=ps[j];break;}}
+    if(!prog&&ds.length){prog=document.createElement("span");ds[0].insertAdjacentElement("beforebegin",prog);prog.setAttribute("data-dl-ui","1");}
+    if(prog){var n=words(r),p=document.createElement("div");p.className="panel dl-all";p.setAttribute("data-dl-ui","1");
+      p.innerHTML='<p class="tts-b" style="margin:0 0 8px">Télécharger tout le cours de ce concours ('+r.cours.length+' chapitres, environ '+n.toLocaleString("fr-FR")+' mots) :</p><button type="button" class="ghost small" data-dl="allpdf">Tout le concours en PDF</button> <button type="button" class="ghost small" data-dl="alltxt">Tout le concours en .txt</button><div class="dl-conf" role="group" aria-label="Confirmer le téléchargement du concours complet" hidden></div>';
+      prog.insertAdjacentElement("afterend",p);}}
+}catch(err){kill(err);}}
+var pend=false;
+obs=new MutationObserver(function(){if(dead||pend)return;pend=true;setTimeout(function(){pend=false;decorate();},0);});
+obs.observe(document.getElementById("app"),{childList:true,subtree:true});
+decorate();
+window.DokiDL={version:version};
+}catch(err){kill(err);}
+})();
 </script></body></html>
