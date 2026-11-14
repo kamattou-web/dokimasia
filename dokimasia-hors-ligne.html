@@ -271,17 +271,17 @@ var nready={};function refreshNeural(){if(!N())return;Promise.all(N().VOICES.map
 loadVoices();setTimeout(refreshNeural,300);if(S.addEventListener)S.addEventListener("voiceschanged",loadVoices);else S.onvoiceschanged=loadVoices;
 function curVoice(){var x=vs.value||"s:0";if(x.slice(0,2)==="n:")return{n:x.slice(2)};return{s:voices[+x.slice(2)]};}
 function save(){var c=curVoice();pref={rate:+rs.value,voice:c.n?"n:"+c.n:(c.s?c.s.name:"")};try{localStorage.setItem(PK,JSON.stringify(pref))}catch(e){}}
-var cur=null; // {el, parts:[{node,start,end,text}], idx, paused, id}
+var X_={hook:null};var cur=null; // {el, parts:[{node,start,end,text}], idx, paused, id}
 var runId=0;
 function textNodes(el){var out=[],w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p||!n.nodeValue.trim())return 2;if(p.closest(".tts-b,script,style,button:not(.card),select,textarea,input,[hidden]"))return 2;if(p.closest("details:not([open])")&&!p.closest("summary"))return 2;var cs=getComputedStyle(p);if(cs.display==="none"||cs.visibility==="hidden")return 2;return 1;}});var n;while(n=w.nextNode())out.push(n);return out;}
-function sentences(el){var parts=[];textNodes(el).forEach(function(n){var t=n.nodeValue,re=/[\s\S]+?(?:[.!?…]+(?:[\s\u00a0\u202f]?[»")\]])*(?=\s+[A-ZÀ-ÖØ-Þ«"(\d–—-]|\s*$)(?<!\b(?:art|n°|cf|p|al|M|Mme|MM|Dr|ex|etc|av|bd|vol|éd|chap|op|cit|réf|J\.-[A-Z]|[A-Z])\.)\s*|$)/g,m;
+function sentences(el){var parts=[];textNodes(el).forEach(function(n){var t=n.nodeValue,re=/[\s\S]+?(?:[.!?…]+(?:[\s\u00a0\u202f]?[»")\]])*(?=\s+[A-ZÀ-ÖØ-Þ«"(\d–—-]|\s*$)(?<!\b(?:art|arts|n°|nos|cf|p|pp|al|M|Mme|MM|Mlle|Me|Dr|Pr|ex|etc|av|bd|vol|éd|chap|op|cit|réf|Cass|cass|civ|crim|com|soc|ch|sect|Ass|plén|req|Cons|const|préc|spéc|obs|concl|not|ord|Rec|Leb|sq|suiv|env|janv|févr|avr|juill|sept|oct|nov|déc|anc|mod|J\.-[A-Z]|[A-Z])\.)\s*|$)/g,m;
 while((m=re.exec(t))){var s=m[0];if(!s){re.lastIndex++;if(re.lastIndex>t.length)break;continue;}if(!s.trim())continue;
  // découpe les phrases très longues
  while(s.length>220){var cut=s.lastIndexOf(", ",220);if(cut<60)cut=s.lastIndexOf(" ",220);if(cut<1)cut=220;parts.push({node:n,start:m.index+(m[0].length-s.length),end:m.index+(m[0].length-s.length)+cut+1,text:s.slice(0,cut+1)});s=s.slice(cut+1);}
  parts.push({node:n,start:m.index+m[0].length-s.length,end:m.index+m[0].length,text:s});}});return parts;}
 function unmark(){document.querySelectorAll("mark.tts-m").forEach(function(m){var p=m.parentNode;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize();});}
 function mark(p){try{unmark();if(!document.contains(p.node))return;var r=document.createRange();r.setStart(p.node,Math.max(0,p.start));r.setEnd(p.node,Math.min(p.node.nodeValue.length,p.end));var mk=document.createElement("mark");mk.className="tts-m";r.surroundContents(mk);
- var b=mk.getBoundingClientRect();if(b.top<60||b.bottom>innerHeight-90)mk.scrollIntoView({block:"center",behavior:"smooth"});}catch(e){}}
+ var hk=0;try{hk=X_.hook&&X_.hook(mk,p)}catch(e){X_.hook=null}if(!hk){var b=mk.getBoundingClientRect();if(b.top<60||b.bottom>innerHeight-90)mk.scrollIntoView({block:"center",behavior:"smooth"});}}catch(e){}}
 function stop(){runId++;S.cancel();if(N())N().stop();unmark();if(cur&&cur.el)cur.el.classList.remove("tts-on");cur=null;bar.hidden=true;}
 function speakNext(id){if(id!==runId||!cur)return;if(cur.idx>=cur.texts.length){stop();return;}
  // recalculer les positions à chaque phrase (le surlignage modifie le DOM)
@@ -327,7 +327,7 @@ function decorate(){document.querySelectorAll(SEL).forEach(function(el){if(el.__
  b.addEventListener("click",function(e){e.stopPropagation();e.preventDefault();if(N())N().unlock();if(cur&&cur.el===el){stop();return;}play(el,titleOf(el));},true);
  if(el.tagName==="DETAILS"){var s=el.querySelector(":scope>summary");if(s)s.after(b);else el.prepend(b);}else el.prepend(b);});}
 var app=document.getElementById("app");new MutationObserver(function(){if(cur&&!document.contains(cur.el))stop();decorate();}).observe(app,{childList:true,subtree:true});
-decorate();addEventListener("pagehide",function(){S.cancel()});window.DokiTTS={play:play,stop:stop,toggle:function(){if(cur)pb.click();},active:function(){return!!cur}};
+decorate();addEventListener("pagehide",function(){S.cancel()});X_.cur=function(){return cur};X_.sentences=sentences;X_.unmark=unmark;X_.paused=function(){return pb.textContent==="Reprendre"};X_.go=function(i,run){if(!cur||!cur.texts.length)return false;i=Math.max(0,Math.min(cur.texts.length-1,i|0));runId++;S.cancel();if(N())N().stop();cur.idx=i;var id=runId;if(run){pb.textContent="Pause";setTimeout(function(){speakNext(id)},60);}else{pb.textContent="Reprendre";unmark();var ps=sentences(cur.el),q=ps[i];if(!(q&&q.text===cur.texts[i])){q=null;ps.forEach(function(z,j){if(z.text===cur.texts[i]&&(!q||Math.abs(j-i)<Math.abs(q.j-i))){q=z;q.j=j}})}if(q)mark(q);}return true;};window.DokiTTS={_x:X_,play:play,stop:stop,toggle:function(){if(cur)pb.click();},active:function(){return!!cur}};
 })();
 </script>
 <div class="sr" aria-live="polite" id="a11yLive"></div>
@@ -696,5 +696,99 @@ render=function(){origRender.apply(this,arguments);try{after();}catch(err){kill(
 window.DokiRev={store:function(){return S;},key:KEY};
 render();
 }catch(err){kill(err);}
+})();
+</script><!-- DOKITTS-CLICK v1 --><style id="dokitts-css">mark.tts-m[data-ttsx]{scroll-margin:80px 0 190px}
+mark.tts-m:focus{outline:3px solid #000;outline-offset:2px;box-shadow:0 0 0 6px #FFB000}
+.ttsx-on{cursor:pointer}
+@media (hover:hover){.ttsx-on{cursor:text}}
+#ttsbar .ttsx-hint{white-space:normal;max-width:none;flex-basis:100%;font-size:13px}
+html.hc mark.tts-m{background:#ff0;color:#000}
+#ttsbar .ttsx-note{flex-basis:100%;font-size:13px}#ttsbar .ttsx-note summary{cursor:pointer;min-height:32px;display:flex;align-items:center;color:var(--muted)}
+@media (max-width:600px){#ttsbar .ttsx-hint{font-size:12px}#ttsbar select{max-width:150px}}
+</style><script id="dokitts-js">/* Dokimasia – « toucher pour lire » : clic/tap sur une phrase pendant la lecture vocale.
+   Module isolé : si quoi que ce soit échoue, la lecture d'origine continue sans lui. */
+(function(){
+var X,on=false;
+function safe(f){return function(a,b){try{return f(a,b)}catch(e){try{console.info("ttsclick",e&&e.message)}catch(_){}}}}
+try{
+if(window.DOKITTS_TEST_THROW==="init")throw new Error("test init");
+var T=window.DokiTTS;if(!T||!T._x)return;X=T._x;
+var d=document,bar=d.getElementById("ttsbar"),app=d.getElementById("app"),stopB=d.getElementById("ttsStop");
+if(!bar||!app||!stopB)return;
+var RM=window.matchMedia?matchMedia("(prefers-reduced-motion: reduce)"):{matches:false};
+var follow=true,ftimer=0,kbd=false,down=null,lastMk=null,lastEl=null,wantFocus=false;
+/* bouton « Suivre la lecture » et aide dans la barre */
+var fb=d.createElement("button");fb.type="button";fb.id="ttsFollow";fb.hidden=true;fb.textContent="Suivre la lecture";
+stopB.parentNode.insertBefore(fb,stopB.nextSibling);
+var hint=d.createElement("span");hint.className="tl ttsx-hint";hint.id="ttsxHint";hint.textContent="Touchez une phrase pour lire à partir d’elle";
+fb.parentNode.insertBefore(hint,fb.nextSibling);
+/* barre plus compacte sur mobile : les conseils de voix passent dans un volet repliable */
+[].forEach.call(bar.querySelectorAll("span.tl"),function(sp){if(sp.id||!/Voix plus naturelle/.test(sp.textContent))return;
+ var dt=d.createElement("details");dt.className="ttsx-note";dt.innerHTML="<summary>Conseils pour les voix</summary>";sp.parentNode.insertBefore(dt,sp);dt.appendChild(sp);});
+var live=d.getElementById("a11yLive");if(!live){live=d.createElement("div");live.className="sr";live.setAttribute("aria-live","polite");d.body.appendChild(live);}
+function say(t){live.textContent="";setTimeout(function(){live.textContent=t},40);}
+/* aide clavier */
+var ul=d.querySelector("#a11yKeys ul");
+if(ul&&!d.getElementById("ttsxKeys")){var li=d.createElement("li");li.id="ttsxKeys";
+ li.innerHTML="<b>Pendant la lecture</b> : touchez ou cliquez une phrase pour reprendre la lecture à cet endroit (en pause aussi : la lecture repart de là). <b>Alt + Flèche bas / Alt + Flèche haut</b> : phrase suivante / précédente. <b>Tab</b> jusqu’à la phrase surlignée, puis <b>Flèches</b> pour changer de phrase et <b>Entrée</b> pour lire depuis elle (<b>Espace</b> reste pause / reprise).";
+ ul.appendChild(li);}
+function cur(){return X.cur()}
+function playing(){return !!cur()&&!X.paused()}
+function setFollow(v){follow=v;clearTimeout(ftimer);fb.hidden=v||!cur();
+ if(!v)ftimer=setTimeout(function(){var mk=d.querySelector("mark.tts-m");if(!mk)return;var b=mk.getBoundingClientRect();if(b.bottom>0&&b.top<innerHeight)setFollow(true);else setFollow(false);},6000);}
+function toMark(force){var mk=d.querySelector("mark.tts-m");if(!mk)return;var b=mk.getBoundingClientRect(),bh=bar.hidden?0:bar.offsetHeight;
+ if(force||b.top<70||b.bottom>innerHeight-bh-30)mk.scrollIntoView({block:"center",behavior:RM.matches?"auto":"smooth"});}
+fb.addEventListener("click",safe(function(){setFollow(true);toMark(true);var mk=d.querySelector("mark.tts-m");if(mk&&kbd)mk.focus({preventScroll:true});}));
+/* l'utilisateur fait défiler lui-même : on ne lui vole pas la main */
+function userScroll(e){if(e&&e.target&&e.target.closest&&e.target.closest("#ttsbar,input,select"))return;if(cur())setFollow(false);}
+addEventListener("wheel",userScroll,{passive:true});
+addEventListener("touchmove",userScroll,{passive:true});
+d.addEventListener("keydown",function(e){if(!cur())return;var k=e.key;
+ if(/^(PageUp|PageDown|Home|End)$/.test(k)||(!e.altKey&&/^(ArrowUp|ArrowDown)$/.test(k)&&!(e.target&&e.target.matches&&e.target.matches("mark.tts-m,select,input,textarea"))))userScroll();},true);
+/* appelé par la lecture d'origine à chaque nouvelle phrase surlignée */
+var onMark=function(mk){if(window.DOKITTS_TEST_THROW==="mark")throw new Error("test mark");
+ lastMk=mk;mk.tabIndex=0;mk.setAttribute("data-ttsx","");
+ var c=cur();if(c&&c.el)c.el.classList.add("ttsx-on");
+ var c0=cur();if(c0&&c0.el!==lastEl){lastEl=c0.el;follow=true;clearTimeout(ftimer);fb.hidden=true;d.querySelectorAll(".ttsx-on").forEach(function(el){if(el!==c0.el)el.classList.remove("ttsx-on")});}
+ if(wantFocus){wantFocus=false;mk.focus({preventScroll:true});}
+ if(follow)toMark(false);return true;};
+X.hook=onMark;
+d.addEventListener("focusin",function(e){kbd=!!(e.target&&e.target.matches&&e.target.matches("mark.tts-m"));});
+/* fin de lecture : on nettoie */
+new MutationObserver(safe(function(){if(bar.hidden||!cur()){fb.hidden=true;follow=true;clearTimeout(ftimer);kbd=false;
+ d.querySelectorAll(".ttsx-on").forEach(function(el){el.classList.remove("ttsx-on")});}})).observe(bar,{attributes:true,attributeFilter:["hidden"]});
+/* position absolue (en caractères) d'un point dans le bloc lu */
+function abs(root,node,off){var r=d.createRange();r.setStart(root,0);r.setEnd(node,off);return r.toString().length;}
+function indexAt(node,off){var c=cur(),el=c.el;var a=abs(el,node,off);X.unmark();
+ var ps=X.sentences(el);if(!ps.length)return -1;
+ var starts=new Map(),w=d.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,acc=0;while((n=w.nextNode())){starts.set(n,acc);acc+=n.nodeValue.length;}
+ var k=ps.length-1;for(var i=0;i<ps.length;i++){var s=(starts.get(ps[i].node)||0)+ps[i].start,e=s+(ps[i].end-ps[i].start);if(a<e){k=i;break;}}
+ if(ps[k].text!==c.texts[k]){var bj=-1;c.texts.forEach(function(x,j){if(x===ps[k].text&&(bj<0||Math.abs(j-k)<Math.abs(bj-k)))bj=j});if(bj>=0)k=bj;}
+ return k;}
+function caretAt(x,y){var p;if(d.caretPositionFromPoint){p=d.caretPositionFromPoint(x,y);if(p&&p.offsetNode)return{node:p.offsetNode,off:p.offset};}
+ if(d.caretRangeFromPoint){p=d.caretRangeFromPoint(x,y);if(p)return{node:p.startContainer,off:p.startOffset};}return null;}
+var NOJUMP="a,button,summary,input,select,textarea,label,option,[contenteditable],[role=button],.tts-b,#ttsbar";
+app.addEventListener("pointerdown",function(e){down={x:e.clientX,y:e.clientY,t:Date.now()};},{passive:true,capture:true});
+app.addEventListener("click",safe(function(e){var c=cur();if(!c||e.defaultPrevented||e.button)return;
+ if(window.DOKITTS_TEST_THROW==="click")throw new Error("test click");
+ var t=e.target;if(!t||!t.closest||t.closest(NOJUMP)||!c.el.contains(t))return;
+ if(e.detail>1)return;
+ var sel=window.getSelection&&getSelection();if(sel&&!sel.isCollapsed&&String(sel).trim())return;
+ var dn=down;down=null;if(dn&&Date.now()-dn.t<1500&&(Date.now()-dn.t>600||Math.abs(e.clientX-dn.x)>12||Math.abs(e.clientY-dn.y)>12))return;
+ var p=caretAt(e.clientX,e.clientY);if(!p||!c.el.contains(p.node)){p=null;}
+ var k;if(p)k=indexAt(p.node,p.off);
+ else{X.unmark();var blk=t.closest("p,li,h1,h2,h3,h4,h5,h6,dd,dt,div")||t;if(blk===c.el||blk.contains(c.el))return;var ps=X.sentences(c.el);k=ps.findIndex(function(q){return blk.contains(q.node)});if(k<0){X.go(c.idx,playing());return;}}
+ if(k<0)return;
+ setFollow(true);X.go(k,true);say("Lecture depuis la phrase "+(k+1)+" sur "+c.texts.length);}));
+function move(dir){var c=cur();if(!c)return;var k=Math.max(0,Math.min(c.texts.length-1,c.idx+dir));setFollow(true);if(kbd)wantFocus=true;X.go(k,playing());say("Phrase "+(k+1)+" sur "+c.texts.length);}
+d.addEventListener("keydown",safe(function(e){var c=cur();if(!c)return;var t=e.target;
+ if(e.altKey&&!e.ctrlKey&&!e.metaKey&&(e.key==="ArrowDown"||e.key==="ArrowUp")&&!(t&&t.closest&&t.closest("select,input,textarea,[contenteditable]"))){e.preventDefault();e.stopPropagation();move(e.key==="ArrowDown"?1:-1);return;}
+ if(!(t&&t.matches&&t.matches("mark.tts-m"))||e.altKey||e.ctrlKey||e.metaKey)return;
+ if(e.key==="Enter"){e.preventDefault();e.stopPropagation();setFollow(true);wantFocus=true;X.go(c.idx,true);say("Lecture depuis la phrase "+(c.idx+1));return;}
+ if(e.key==="ArrowDown"||e.key==="ArrowRight"){e.preventDefault();e.stopPropagation();move(1);return;}
+ if(e.key==="ArrowUp"||e.key==="ArrowLeft"){e.preventDefault();e.stopPropagation();move(-1);return;}
+ if(e.key==="Home"||e.key==="End"){e.preventDefault();e.stopPropagation();setFollow(true);X.go(e.key==="Home"?0:c.texts.length-1,playing());}}),true);
+on=true;
+}catch(err){try{if(X)X.hook=null;console.info("ttsclick désactivé",err&&err.message)}catch(_){}}
 })();
 </script></body></html>
