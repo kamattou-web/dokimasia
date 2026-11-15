@@ -13,6 +13,18 @@ textarea,input,select{width:100%;font:15px system-ui,sans-serif;border:1px solid
 .bar{display:grid;grid-template-columns:1fr 120px 60px;gap:10px;align-items:center;margin:8px 0;font-size:14px}.track{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.track i{display:block;height:100%;background:var(--accent)}
 .ok{color:var(--green);font-weight:700}.ko{color:var(--red);text-decoration:line-through}fieldset{border:0;border-top:1px solid var(--line);margin:0;padding:10px 0}legend{font-weight:600}label{display:block;padding:2px 0}
 .cit{font-style:italic;color:var(--muted)}footer{margin-top:40px;font-size:13px;color:var(--muted)}@media (max-width:560px){.bar{grid-template-columns:1fr 70px 48px}h1{font-size:23px}}.simple{background:#f3f7f2;border-left:4px solid #2e7d32;padding:10px 14px;margin:0 0 16px;border-radius:6px;color:#1c2b1c}#ttsbar[hidden]{display:none}.src,a[href^="http"]{overflow-wrap:anywhere;word-break:break-word}main li,main p,.panel li,.panel p,td,th{overflow-wrap:anywhere;min-width:0}main ul,main ol{padding-left:1.2em;max-width:100%}main a{max-width:100%}
+
+@media (max-width:640px){
+.tts-b{font-size:0!important;padding:0!important;width:44px!important;min-width:44px!important;height:44px;display:inline-flex!important;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;box-sizing:border-box}
+.tts-b::before{content:"🔊";font-size:20px}
+#mtools{max-width:900px;margin:8px auto 0;padding:0 16px}
+#mtools>summary{list-style:none;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:2px solid var(--accent);border-radius:12px;color:var(--accent);font:700 15px system-ui,sans-serif;cursor:pointer;width:max-content;max-width:100%}
+#mtools>summary::-webkit-details-marker{display:none}
+#mtools[open]>summary{margin-bottom:8px}
+#mtools #pwabar,#mtools #a11ybar{padding:0;margin:0 0 6px}
+#a11yHelp{display:none!important}
+}
+@media print{#mtools,#pwabar,#a11ybar,.tts-b,.backhome,.tabs{display:none!important}details{display:block}}
 </style><style>.backhome{position:sticky;top:8px;z-index:50;min-height:44px;padding:10px 18px;font-size:16px;font-weight:600;background:#fff!important;border:2px solid currentColor;box-shadow:0 2px 8px rgba(0,0,0,.15)}.backhome:focus-visible{outline:3px solid #f5b700;outline-offset:2px}html.hc .backhome{background:#000!important;color:#ff0}</style></head><body><style>
 #pwabar{max-width:900px;margin:0 auto;padding:12px 16px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
 #pwabar button{font:600 13px system-ui,sans-serif;border-radius:8px;padding:6px 12px;cursor:pointer;background:transparent;color:var(--accent);border:1px solid var(--accent)}
@@ -95,7 +107,7 @@ if(T==="jury")h+=r.jury?`<div class="panel"><p class="muted" style="margin:0">So
 if(T==="parler")h+=`${r.parler.lexique.length?`<div class="panel"><h3>Lexique du métier</h3>${r.parler.lexique.map(x=>`<details><summary>${esc(x.t)}</summary><p>${esc(x.d)}</p><p class="muted">${esc(x.u)}</p>${x.p?`<p class="non">Piège : ${esc(x.p)}</p>`:""}</details>`).join("")}</div>`:""}${r.parler.dire.length?`<div class="panel"><h3>Ne pas dire, dire</h3><table><tr><th>On entend</th><th>Le professionnel dit</th></tr>${r.parler.dire.map(x=>`<tr><td class="non">${esc(x.non)}</td><td class="oui">${esc(x.oui)}</td></tr>`).join("")}</table></div>`:""}${r.parler.reflexes.length?`<div class="panel"><h3>Réflexes de parole</h3><ul>${r.parler.reflexes.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}`;
 if(T==="cours")h+=`<div class="panel"><h3>Programme</h3>${r.programme.map(m=>`<h4>${esc(m.nom)}</h4><ol>${m.ch.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>`).join("")}</div>${r.cours.length?r.cours.map(c=>`<details><summary>${esc(c.m)} · ${esc(c.t)}</summary><div>${c.simple?`<section class="simple" aria-label="Comprendre simplement"><h3>Comprendre simplement</h3>${md(c.simple)}</section><h3>Le cours complet</h3>`:""}${md(c.texte)}</div></details>`).join(""):`<div class="panel"><p style="margin:0">Les cours de ce concours sont en cours de rédaction : cette page est mise à jour chaque semaine.</p></div>`}`;
 if(T==="quiz")h+=r.quiz.length?r.quiz.map((z,n)=>{const hs=L.quiz[r.id+"~"+z.k]||[];return `<details data-qz="${n}"><summary>${esc(z.t)}${hs.length?` · dernier score ${hs[hs.length-1]}`:""}</summary>${z.qs.map((q,k)=>`<fieldset><legend>${k+1}. ${esc(q.q)}</legend>${q.options.map((o,j)=>`<label><input type="radio" name="q${n}_${k}" value="${j}"> ${esc(o)}</label>`).join("")}<p class="muted" hidden>${esc(q.explication)}</p></fieldset>`).join("")}<button data-corr="${n}">Corriger</button> <span class="score"></span></details>`}).join(""):`<div class="panel"><p style="margin:0">Pas encore de quiz pour ce concours : mise à jour chaque semaine.</p></div>`;
-if(T==="dilemmes"){const v=r.dils.filter(d=>L.vus[d.id]).length;h+=r.dils.length?`<div class="panel"><p style="margin:0">Lisez la situation, rédigez votre réponse comme si vous étiez déjà en poste, puis seulement ouvrez le corrigé. ${v} traité(s) sur ${r.dils.length}.</p><p style="margin:10px 0 0"><button id="tirer">Tirer un dilemme au hasard</button></p></div>${r.dils.map(d=>`<details class="dil" data-id="${esc(d.id)}"><summary>${L.vus[d.id]?"✓ ":""}${esc(d.titre||"Dilemme")}</summary><div>${md(d.texte)}</div><textarea data-rep="${esc(d.id)}" placeholder="Votre réponse, avant d’ouvrir le corrigé">${esc(L.rep[d.id]||"")}</textarea>${d.corrige?`<details data-cor="${esc(d.id)}"><summary>Voir le corrigé</summary><div>${md(d.corrige)}</div></details>`:""}</details>`).join("")}`:`<div class="panel"><p style="margin:0">La banque de dilemmes de ce concours est en cours de constitution : mise à jour chaque semaine.</p></div>`;}
+if(T==="dilemmes"){const v=r.dils.filter(d=>L.vus[d.id]).length;h+=r.dils.length?`<div class="panel"><p style="margin:0">Lisez la situation, rédigez votre réponse comme si vous étiez déjà en poste, puis seulement ouvrez le corrigé. ${v} ${v>1?"traités":"traité"} sur ${r.dils.length}.</p><p style="margin:10px 0 0"><button id="tirer">Tirer un dilemme au hasard</button></p></div>${r.dils.map(d=>`<details class="dil" data-id="${esc(d.id)}"><summary>${L.vus[d.id]?"✓ ":""}${esc(d.titre||"Dilemme")}</summary><div>${md(d.texte)}</div><textarea data-rep="${esc(d.id)}" placeholder="Votre réponse, avant d’ouvrir le corrigé">${esc(L.rep[d.id]||"")}</textarea>${d.corrige?`<details data-cor="${esc(d.id)}"><summary>Voir le corrigé</summary><div>${md(d.corrige)}</div></details>`:""}</details>`).join("")}`:`<div class="panel"><p style="margin:0">La banque de dilemmes de ce concours est en cours de constitution : mise à jour chaque semaine.</p></div>`;}
 if(T==="plan"){const E=r.excellence;const nq=Object.keys(L.quiz).filter(k=>k.startsWith(r.id+"~")).reduce((s,k)=>s+L.quiz[k].length,0),nd=r.dils.filter(d=>L.vus[d.id]).length;const tot=r.programme.reduce((s,m)=>s+m.ch.length,0);
 const lig=[["Épreuves blanches corrigées","avec un formateur ou une Prépa Talents",E.blancs],["Oraux simulés","jury de pairs (espace en ligne) ou oral blanc",E.oraux],["Quiz de restitution",nq,E.quizSemaine+" par semaine"],["Dilemmes professionnels traités",nd,E.dilemmes],["Chapitres du programme travaillés","",tot]];
 h+=`<div class="panel"><h3>Plan d’excellence</h3><p class="muted" style="margin:0">Des objectifs au moins égaux à ceux des préparations payantes les plus réputées.</p><table><tr><th>Objectif</th><th>Visé</th><th>Votre progression</th></tr>${lig.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(String(x[2]))}</td><td>${esc(String(x[1]))}</td></tr>`).join("")}</table>${E.justification?`<p class="muted">${esc(E.justification)}</p>`:""}<h4>D’où viennent ces objectifs</h4><ul>${((E.sources||[]).length?E.sources:SRC).map(s=>`<li><a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("")}</ul></div>
@@ -531,7 +543,7 @@ function warnings(){var h="";
   return h;}
 function saveBox(){return '<div class="panel" data-rev-io><h3 style="margin-top:0">Sauvegarder ma progression de révision</h3><p style="margin:0 0 8px">Votre plan et vos questions à revoir restent sur cet appareil, sans compte. Exportez-les régulièrement (par exemple chaque semaine) pour ne rien perdre et pour les reprendre sur un autre appareil.</p>'+
   '<div class="row"><button type="button" class="btn ghost small" data-rv="export">Exporter (fichier .json)</button><button type="button" class="btn ghost small" data-rv="import">Importer un fichier</button><input type="file" accept=".json,application/json" data-rev-file hidden aria-hidden="true" tabindex="-1"></div>'+
-  (importBuf?'<div class="rev-imp" role="group" aria-label="Importer la sauvegarde"><p style="margin:8px 0">Fichier valide : '+importBuf.np+' plan(s) et '+importBuf.nc+' question(s) à revoir, exporté le '+e_(importBuf.date)+'. Que faire ?</p><div class="row"><button type="button" class="btn small" data-rv="merge">Fusionner avec ma progression</button><button type="button" class="btn ghost small" data-rv="replace">Remplacer ma progression</button><button type="button" class="btn ghost small" data-rv="impcancel">Annuler</button></div></div>':"")+
+  (importBuf?'<div class="rev-imp" role="group" aria-label="Importer la sauvegarde"><p style="margin:8px 0">Fichier valide : '+importBuf.np+' plan'+(importBuf.np>1?'s':'')+' et '+importBuf.nc+' question'+(importBuf.nc>1?'s':'')+' à revoir, exporté le '+e_(importBuf.date)+'. Que faire ?</p><div class="row"><button type="button" class="btn small" data-rv="merge">Fusionner avec ma progression</button><button type="button" class="btn ghost small" data-rv="replace">Remplacer ma progression</button><button type="button" class="btn ghost small" data-rv="impcancel">Annuler</button></div></div>':"")+
   (msg?'<p style="margin:8px 0 0"><b>'+e_(msg)+'</b></p>':"")+'</div>';}
 function form(r,p){var td=today(),c=compute(r,p||{date:isoDay(td+60),hpw:6,start:td,done:{}});
   return '<form class="panel rev-form" data-rev-form novalidate><h3 style="margin-top:0">'+(p?"Modifier mon plan":"Créer mon plan de révision")+'</h3>'+
@@ -569,7 +581,7 @@ function reviewView(r){var td=today(),list=cardsOf(r.id).map(function(kc){return
   var due=list.filter(function(x){return x.c.due<=td||answered[x.k];}),soon=list.filter(function(x){return x.c.due>td&&x.c.due<=td+7&&!answered[x.k];}).length;
   var acq=cardsOf(r.id).filter(function(kc){return kc[1].ok;}).length;
   var h='<section class="panel" aria-labelledby="revQ"><h3 id="revQ" tabindex="-1" style="margin-top:0">À revoir aujourd’hui ('+due.filter(function(x){return !answered[x.k];}).length+')</h3>';
-  h+='<p class="muted" style="margin:0 0 6px">Les questions de quiz ratées ou marquées « À revoir » reviennent au bon moment : le lendemain, puis après 2, 4, 7, 15 et 30 jours si vous répondez juste. '+soon+' question(s) prévue(s) dans les 7 jours, '+acq+' acquise(s).</p>';
+  h+='<p class="muted" style="margin:0 0 6px">Les questions de quiz ratées ou marquées « À revoir » reviennent au bon moment : le lendemain, puis après 2, 4, 7, 15 et 30 jours si vous répondez juste. '+soon+(soon>1?' questions prévues':' question prévue')+' dans les 7 jours, '+acq+(acq>1?' acquises.':' acquise.')+'</p>';
   if(!due.length)h+='<p style="margin:0">Rien à revoir aujourd’hui. Faites des quiz : vos erreurs viendront ici.</p>';
   h+='</section>';
   due.slice(0,30).forEach(function(x,n){var q=x.f.q,a=answered[x.k],nm="rvq"+hash(x.k);
@@ -594,7 +606,7 @@ function homeView(){var ids={};Object.keys(S.plans).forEach(function(k){ids[k]=1
   var l=D.filter(function(r){return ids[r.id];});if(!l.length)return "";
   var td=today(),tot=0;
   var items=l.map(function(r){var n=dueCount(r.id);tot+=n;var p=S.plans[r.id],j=p?parseDay(p.date)-td:null;
-    return '<li><button type="button" class="btn ghost small" data-revgo="'+e_(r.id)+'">'+e_(r.metier)+'</button> '+(n?n+" question(s) à revoir aujourd’hui":"rien à revoir aujourd’hui")+(p?(j>=0?", concours dans "+j+" jour"+(j>1?"s":""):", date du concours passée"):"")+'</li>';}).join("");
+    return '<li><button type="button" class="btn ghost small" data-revgo="'+e_(r.id)+'">'+e_(r.metier)+'</button> '+(n?n+(n>1?" questions":" question")+" à revoir aujourd’hui":"rien à revoir aujourd’hui")+(p?(j>=0?", concours dans "+j+" jour"+(j>1?"s":""):", date du concours passée"):"")+'</li>';}).join("");
   return '<section class="panel" data-rev-ui="1" id="revHome" aria-labelledby="revHomeT" tabindex="-1"><h2 id="revHomeT" style="margin-top:0;font-size:18px">À revoir aujourd’hui : '+tot+' question'+(tot>1?"s":"")+'</h2>'+warnings()+(items?'<ul class="rev-list">'+items+'</ul>':"")+'<p class="muted" style="margin:6px 0 0;font-size:14px">Ouvrez un concours puis l’onglet « Réviser » (Alt + R) pour suivre votre plan et revoir vos questions.</p></section>';}
 
 /* ---------- branchements ---------- */
@@ -606,7 +618,7 @@ function after(){if(dead)return;
   lastT=T;lastR=R;
   if(T==="quiz"&&loaded(R))decorateQuiz(R);}
 function decorateQuiz(r){var n=dueCount(r.id);var tb=document.querySelector("#app .tabs");
-  if(tb&&!document.getElementById("revQuizInfo")){tb.insertAdjacentHTML("afterend",'<p class="panel" data-rev-ui="1" id="revQuizInfo" style="margin:8px 0">'+(n?n+" question(s) à revoir aujourd’hui. ":"")+'Vos erreurs de quiz sont reposées automatiquement dans l’onglet <button type="button" class="linkish" data-rvtab="1">Réviser</button>.</p>');}
+  if(tb&&!document.getElementById("revQuizInfo")){tb.insertAdjacentHTML("afterend",'<p class="panel" data-rev-ui="1" id="revQuizInfo" style="margin:8px 0">'+(n?n+(n>1?" questions":" question")+" à revoir aujourd’hui. ":"")+'Vos erreurs de quiz sont reposées automatiquement dans l’onglet <button type="button" class="linkish" data-rvtab="1">Réviser</button>.</p>');}
   document.querySelectorAll("#app details[data-qz]").forEach(function(det){var z=r.quiz[+det.dataset.qz];if(!z)return;
     det.querySelectorAll(":scope>fieldset").forEach(function(fs,k){if(fs.querySelector("[data-rvmark]"))return;var q=z.qs[k];if(!q)return;var key=cardKey(r.id,z.k,hash(q.q)),c=S.cards[key],on=!!(c&&!c.ok&&!c.x);
       var b=document.createElement("button");b.type="button";b.className="btn ghost small rev-mark";b.setAttribute("data-rv","mark");b.setAttribute("data-rvmark","1");b.setAttribute("data-k",key);b.setAttribute("data-zi",det.dataset.qz+":"+k);b.setAttribute("aria-pressed",on?"true":"false");b.setAttribute("data-rev-ui","1");b.textContent=on?"✓ À revoir":"À revoir";b.setAttribute("aria-label","Marquer la question "+(k+1)+" à revoir");
@@ -648,7 +660,7 @@ document.addEventListener("click",function(e){if(dead)return;try{
       if(+c.value!==q.bonne){failFromQuiz(R,z,q);nf++;}else if(S.cards[key]&&!S.cards[key].ok&&S.cards[key].due<=today())grade(key,true,"quiz");});
     if(nf)askPersist();save();var info=document.getElementById("revQuizInfo");if(info)info.remove();
     document.querySelectorAll("[data-rvmark]").forEach(function(x){x.remove();});decorateQuiz(R);
-    if(nf)say(nf+" question(s) ratée(s) ajoutée(s) à « À revoir aujourd’hui », dans l’onglet Réviser.");return;}
+    if(nf)say(nf+(nf>1?" questions ratées ajoutées":" question ratée ajoutée")+" à « À revoir aujourd’hui », dans l’onglet Réviser.");return;}
   var a=b.dataset.rv;if(!a)return;
   if(readOnly&&/^(mark|check|remove|delplan|edit)$/.test(a)){say("Progression en lecture seule : aucune modification possible.");return;}
   if(a==="mark"){var k=b.dataset.k,c=S.cards[k],on=c&&!c.ok&&!c.x;
@@ -1072,5 +1084,13 @@ var pend=false;new MutationObserver(function(){if(pend)return;pend=true;setTimeo
 if(document.readyState!=="loading")decorate();else document.addEventListener("DOMContentLoaded",function(){decorate();});
 window.SaisieMobile={maskDate:maskDate,finishDate:finishDate};
 })();
+</script>
+<script>
+(function(){var touch=matchMedia("(pointer:coarse)").matches,ins=document.getElementById("pwaInstall");
+if(ins&&touch)ins.textContent="Installer sur ce téléphone";if(touch&&matchMedia("(max-width:640px)").matches){var hd=function(){document.querySelectorAll("button").forEach(function(x){if(/sur mon ordinateur/.test(x.textContent)){var pn=x.closest(".panel");if(pn&&!pn.hidden)pn.hidden=true;}});};hd();new MutationObserver(hd).observe(document.body,{childList:true,subtree:true});}
+if(!matchMedia("(max-width:640px)").matches)return;
+var p=document.getElementById("pwabar");if(!p)return;var d=document.createElement("details");d.id="mtools";
+d.innerHTML='<summary aria-label="Outils : installer, sauvegarder, écouter, taille du texte">⚙︎ Outils</summary>';
+p.parentNode.insertBefore(d,p);["pwabar","pwahelp","a11ybar","a11yKeys"].forEach(function(i){var e=document.getElementById(i);if(e)d.appendChild(e);});})();
 </script>
 </body></html>
